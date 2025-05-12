@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
-import cv2
+from PIL import Image
 import torch
 from ultralytics import YOLO
 
@@ -58,8 +58,8 @@ def yolo2yolo_seg(detection):
     # liste des images des tampons
     cropped_list = []
 
-    # on récupère l'image d'origine
-    image = cv2.cvtColor(detection.orig_img, cv2.COLOR_BGR2RGB)
+    # on récupère l'image d'origine en BGR et convertie en RGB
+    image = detection.orig_img[:, :, ::-1]
 
     # on ajuste les boîtes englobantes
     adjusted_boxes = adjust_boxes_tensor(detection.boxes.xyxy, image.shape)
@@ -97,8 +97,8 @@ def plot_seg_mask(segmentation, orig_img=True, ax=None):
         mask = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
 
         # affichage
-        image = segmentation.orig_img.copy()
-        image = cv2.resize(image, (w, h))
+        image = Image.fromarray(segmentation.orig_img.copy())
+        image = np.array(image.resize((w, h)))
         ax.imshow(image)
         ax.imshow(mask)
     else:
