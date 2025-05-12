@@ -96,13 +96,13 @@ def display_imgs(places):
 # MAIN
 # ----------------------------------------------------------------------------------------------------------------------
 # 🖼️ Affichage
-st.title("🖼️ Présentation Image Est")
+st.title("🖼️ T2IA - Traitement d’Images d’Archives par l’Intelligence Artificielle")
 
 col_names, col_dates = st.columns([0.85, 0.15])
 with col_names:
     st.caption("Matthieu PELINGRE & Antoine TABBONE")
 with col_dates:
-    st.caption("26 février 2025")
+    st.caption("12 mai 2025")
 
 with st.container(height=NUM_LINES * 150, border=True):
     columns = st.columns(NUM_COLUMNS)
