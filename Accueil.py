@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-
+st.set_page_config(layout="wide")
 # logos de la sidebar
 st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
 
