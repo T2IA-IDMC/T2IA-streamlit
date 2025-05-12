@@ -1,0 +1,13 @@
+Caractéristiques,SAM2.1_t,YOLO11n-seg,YOLO12n-seg
+Nombre de paramètres, 38.9 M, 2.9 M, 2.6 M
+Précision,✅ Plus précis,❌ Moins précis, Plus précis que YOLO11n-seg
+Vitesse CPU ONNX (ms/img),❌ 85 155,✅ 65.9,Inconnu
+Vitesse GPU T4 (ms/img),❌ 22.7,✅ 1.8,✅ < 2
+Support images/vidéos,✅ Oui (images et vidéos),❌ Images uniquement,❌ Images uniquement
+Prompting (zero-shot),✅ Oui,Non,Non
+Ressources nécessaires,❌ Plus de ressources,✅ Peu de ressources,✅ Peu de ressources
+Facilité d'intégration,❌ Complexe (prompting),✅ Très aisée,✅ Très aisée
+Compatibilité frameworks,❌ Torch uniquement,✅ nombreux frameworks,✅ nombreux frameworks
+License,✅ Open source (Apache 2.0),✅ Open source (AGPL-3.0 ou entreprise),✅ cf YOLO11
+Date de sortie,30/09/24, 30/09/2024, 21/02/2025
+Architecture,Hiera,CNN,Mécanismes d'attention simplifiés
