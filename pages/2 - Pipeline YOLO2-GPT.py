@@ -12,7 +12,7 @@ import torch
 from libs.pipeline_YOLO import pipeline_yolo2
 from libs.pipeline_GPT import *
 
-
+st.set_page_config(layout="wide")
 # logos de la sidebar
 st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
 

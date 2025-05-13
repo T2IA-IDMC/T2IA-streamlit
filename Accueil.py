@@ -92,6 +92,17 @@ def display_imgs(places):
     return
 
 
+
+def get_imgs_by_tags(df, tags):
+    """récupération des images en fonction du tag"""
+    if isinstance(tags, str):  # tout similaire peu importe l'input
+        tags = [tags]
+    elif tags is None:
+        tags = []
+
+    return df.loc[df['classes'].map(lambda x: all(tag in x for tag in tags))]
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # MAIN
 # ----------------------------------------------------------------------------------------------------------------------

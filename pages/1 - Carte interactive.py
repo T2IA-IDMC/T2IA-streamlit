@@ -9,7 +9,8 @@ import numpy as np
 import matplotlib as mpl
 from PIL import Image, ImageDraw
 from skimage.filters import threshold_otsu
-
+from sklearn.preprocessing import MinMaxScaler
+import json
 
 # logos de la sidebar
 st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
@@ -71,6 +72,72 @@ def get_camembert_tagged(camembert_res, word_tag):
     return [ent['word'] for ent in camembert_res if ent['entity_group'] == word_tag]
 
 
+# ajouts pour les tags
+def get_img_classes(df, path_classif):
+    """renvoie la colonne des classes des images"""
+    with open(path_classif, 'r') as f:
+        dict_classif = json.load(f)
+
+    return df.img_name.apply(lambda x: dict_classif[x])
+
+
+def get_imgs_by_tags(df, tags):
+    """récupération des images en fonction du tag"""
+    if isinstance(tags, str):  # tout similaire peu importe l'input
+        tags = [tags]
+    elif tags is None:
+        tags = []
+
+    return df.loc[df['classes'].map(lambda x: all(tag in x for tag in tags))]
+
+
+def locations_from_results(ocr_results, df_cities, tags=None):
+    df_res = get_imgs_by_tags(ocr_results, tags)[['img_path', 'img_name', 'city_code']].copy()
+    df_res.drop_duplicates(subset='img_name', keep='first', inplace=True)
+    df_res.dropna(subset=['city_code'], inplace=True)
+    df_res[['img_name', 'img_path']] = df_res[['img_name', 'img_path']].map(lambda x: [x])
+    df_res['count'] = 1
+    df_res = df_res.groupby('city_code').sum()
+    df_res.sort_values(by=['count'], ascending=False, inplace=True)
+
+    return df_res.merge(df_cities, on='city_code')
+
+
+def set_cnt_color(df, quantiles, column=None, cmap='jet'):
+    """pour trouver la couleur des points en fonction du nombre de cartes"""
+    if (column is None):
+        if isinstance(df, pd.Series):
+            color_series = df.copy()
+        else:
+            color_series = df['count'].copy()
+    else:
+        color_series = df[column].copy()
+
+    n_colors = len(quantiles) + 3
+    color_map = mpl.colormaps[cmap]
+    colors = color_map(np.linspace(0, 1, n_colors))
+    colors = (colors * 255).round(0).astype(int)
+    colors[:, 3] = 100  # canal alpha
+    colors = colors.tolist()
+    for quant, color in zip(quantiles, colors[2:-1]):
+        color_series = color_series.apply(lambda x: color if isinstance(x, int) and (x <= quant) else x)
+
+    return color_series
+
+
+def get_size_n_color(ocr_locations, normalizer, quantiles, a=20000, b=2000):
+    col_count = ocr_locations['count']
+
+    # colonne de la taille actuelle
+    col_size = normalizer.transform(col_count.values.reshape(-1, 1))
+    col_size = pd.Series(col_size.flatten(), name='size')
+    col_size = col_size * a + b  # pour l'affichage
+
+    # colonne pour les couleurs
+    col_cnt_color = set_cnt_color(col_count, quantiles).rename('cnt_color')
+
+    return pd.concat([col_size, col_cnt_color], axis=1)
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Variables
 # ----------------------------------------------------------------------------------------------------------------------
@@ -88,12 +155,22 @@ dict_box_color = {
     270: 'green',
 }
 
+# dictionnaire des tags
+with open('data/images/classes.json', 'r') as f:
+    dict_tags = json.load(f)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Session
 # ----------------------------------------------------------------------------------------------------------------------
 # chargement des df
-# TODO : possibilité de modifier le chemin du DataSet
+if 'df_cities' not in st.session_state:
+    df_cities = pd.read_csv('data/ocr/OCR_locations_v2.csv')
+    df_cities = df_cities.drop(columns=['img_name', 'img_path', 'count', 'size', 'cnt_color']).map(eval_str_lists)
+    st.session_state['df_cities'] = df_cities
+else:
+    df_cities = st.session_state['df_cities']
+
+# TODO : possibilité de modifier le chemin du DataSet ?
 if 'ocr_results' not in st.session_state:
     ocr_results = pd.read_csv('data/ocr/OCR_results_v2.csv')
     ocr_results[
@@ -101,14 +178,26 @@ if 'ocr_results' not in st.session_state:
     ] = ocr_results[[col for col in ocr_results.columns if col != 'text']].map(eval_str_lists)
     ocr_results['bbox'] = ocr_results['bbox'].apply(change_coord)
     ocr_results['bbox_color'] = ocr_results['rotation'].apply(lambda x: dict_box_color[x])
+    # classes des images :
+    ocr_results['classes'] = get_img_classes(ocr_results, 'data/images/classification.json')
+    # sauvegarde
     st.session_state.ocr_results = ocr_results
 else:
     ocr_results = st.session_state.ocr_results
 
 if 'ocr_locations' not in st.session_state:
-    ocr_locations = pd.read_csv('data/ocr/OCR_locations_v2.csv').map(eval_str_lists)
-    ocr_locations['size'] = ocr_locations['size'] * 20000 + 2000
-    st.session_state.ocr_locations = ocr_locations
+    ocr_locations = locations_from_results(st.session_state.ocr_results, st.session_state.df_cities)
+
+    norm = MinMaxScaler().fit(ocr_locations['count'].values.reshape(-1, 1))
+    st.session_state.normalizer = norm
+    quantiles = np.quantile(ocr_locations['count'].unique(), np.linspace(0.1, 1, 10)).tolist()
+    st.session_state.quantiles = quantiles
+
+    ocr_locations[['size', 'cnt_color']] = get_size_n_color(ocr_locations,
+                                                            st.session_state.normalizer,
+                                                            st.session_state.quantiles)
+
+    st.session_state.ocr_location = ocr_locations
 else:
     ocr_locations = st.session_state.ocr_locations
 
@@ -292,6 +381,17 @@ if st.session_state['selected_location'] is not None:
     tab_img, tab_ocr, tab_bert = st.tabs(["Image", "OCR", "CamemBERT"])
 
     with tab_img:
+        # affichage des tags
+        img_tags = img_results.classes.values[0]
+
+        if len(img_tags) > 0:
+            tag_markdown = ""
+            for tag in img_tags:
+                tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}]"
+        else:
+            tag_markdown = ":gray-badge[☹️ no tag]"
+        st.markdown(tag_markdown)
+
         # Affichage de l'image sélectionnée
         st.image(image, caption=f"Image : {img_name}")
 
