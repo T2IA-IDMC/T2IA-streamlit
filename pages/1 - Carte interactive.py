@@ -8,10 +8,10 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl
 from PIL import Image, ImageDraw
-from skimage.filters import threshold_otsu
 from sklearn.preprocessing import MinMaxScaler
 import json
 
+st.set_page_config(layout="wide")
 # logos de la sidebar
 st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
 
