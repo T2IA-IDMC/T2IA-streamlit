@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import pandas as pd
 import torch
+import re
 from libs.pipeline_YOLO import pipeline_yolo2
 from libs.pipeline_GPT import *
 
@@ -32,8 +33,8 @@ YOLO_SEG_DIR = Path(r"data/postmarks/model_seg")
 # ----------------------------------------------------------------------------------------------------------------------
 # Variables
 # ----------------------------------------------------------------------------------------------------------------------
-list_yolo_weights = [weights for weights in YOLO_DIR.glob('*') if weights.suffix == '.pt']
-list_yolo_seg_weights = [weights for weights in YOLO_SEG_DIR.glob('*') if weights.suffix == '.pt']
+list_yolo_weights = list(YOLO_DIR.rglob('*.pt'))
+list_yolo_seg_weights = list(YOLO_SEG_DIR.rglob('*.pt'))
 
 dict_box_color = {
     0: 'red',
@@ -74,9 +75,6 @@ def run_pipelineYOLO2():
                                                       st.session_state['yolo_seg_path']).T[0]
 
 
-
-
-
 def change_coord(bbox):
     """Modifie l'ordre des coordonnées des bbox"""
     x_min, x_max, y_min, y_max = bbox
@@ -98,6 +96,11 @@ if 'res_pipeline' not in st.session_state:
     st.session_state['res_pipeline'] = None
 if 'res_gpt4' not in st.session_state:
     st.session_state['res_gpt4'] = None
+if 'gpt_responses' not in st.session_state:
+    gpt_responses = pd.read_csv(Path(r"data/postmarks/ft150GPT4o_1155stamps.csv"))
+    gpt_responses['stamp'] = gpt_responses['stamp'].map(lambda x: x.replace('_cls1', ''))
+    gpt_responses.set_index('stamp', drop=True, inplace=True)
+    st.session_state['gpt_responses'] = gpt_responses
 
 # ----------------------------------------------------------------------------------------------------------------------
 # MAIN
@@ -133,14 +136,23 @@ with pipeline_cols[0]:
 
         with st.container(border=True):
             st.markdown('Paramètres pipeline')
+            dict_yolo_det = {
+                path: path.stem.split('-')[-1].split('_')[0].capitalize() for path in list_yolo_weights
+            }
             st.selectbox(
                 "Modèle de détection :",
-                list_yolo_weights,
+                dict_yolo_det,
+                format_func=lambda x: dict_yolo_det[x],
                 key='yolo_path',
             )
+
+            dict_yolo_seg = {
+                path: path.stem.split('_')[0].split('e-')[-1].capitalize() for path in list_yolo_seg_weights
+            }
             st.selectbox(
                 "Modèle de segmentation :",
-                list_yolo_seg_weights,
+                dict_yolo_seg,
+                format_func=lambda x: dict_yolo_seg[x],
                 key='yolo_seg_path',
             )
 
@@ -192,8 +204,7 @@ if st.session_state['res_pipeline'] is not None:
 
             with st.expander("Tampons détectés"):
                 st.warning("NB. Les images étant redimensionnées à 1024 pixels de côté maximum dans la base de donnée "
-                           "du streamlit, la segmentation peut ne pas être aussi précise que sur les images originales."
-                           " De même que lecture du tampon par GPT4o.")
+                           "du streamlit, la segmentation peut ne pas être aussi précise que sur les images originales.")
                 stamps_cols = st.columns([0.2, 0.8])
 
                 with stamps_cols[0]:
@@ -208,22 +219,35 @@ if st.session_state['res_pipeline'] is not None:
 
                     with stamps_sub_cols[0]:
                         st.image(stamp_img * 255, use_container_width=True, caption=stamps_title)
-                        if st.button("Envoyer à GPT", use_container_width=True):
-                            with stamps_sub_cols[1]:
-                                with st.container(border=True):
-                                    with st.spinner(text="Envoi à GPT4o...", show_time=True):
 
-                                        stamp_base64 = img_array_to_base64(stamp_img)
+                        with stamps_sub_cols[1]:
+                            with st.container(border=True):
+                                st.markdown("Lecture de GPT4o :")
 
-                                        gpt_resp = get_GPT_response(stamp_base64,
-                                                                    stamps_title,
-                                                                    system_content,
-                                                                    model=GPT_MODEL)
+                                if stamps_title in st.session_state['gpt_responses'].index:
+                                    processed_resp = st.session_state['gpt_responses'].loc[stamps_title, :]
+                                else:
+                                    processed_resp = pd.Series(
+                                        json.loads(empty_json(stamps_title))
+                                    ).rename(index=stamps_title).drop('stamp')
+                                st.dataframe(processed_resp, use_container_width=True)
 
-                                        processed_resp = process_GPT4_response(gpt_resp, stamps_title)
-                                        processed_resp = processed_resp.rename(index=processed_resp.stamp).drop('stamp')
+                        #if st.button("Envoyer à GPT", use_container_width=True):
+                        #    with stamps_sub_cols[1]:
+                        #        with st.container(border=True):
+                        #            with st.spinner(text="Envoi à GPT4o...", show_time=True):
 
-                                    st.markdown("Lecture de GPT4o :")
-                                    st.dataframe(processed_resp, use_container_width=True)
+                        #                stamp_base64 = img_array_to_base64(stamp_img)
+
+                        #                gpt_resp = get_GPT_response(stamp_base64,
+                        #                                            stamps_title,
+                        #                                            system_content,
+                        #                                            model=GPT_MODEL)
+
+                        #                processed_resp = process_GPT4_response(gpt_resp, stamps_title)
+                        #                processed_resp = processed_resp.rename(index=processed_resp.stamp).drop('stamp')
+
+                        #            st.markdown("Lecture de GPT4o :")
+                        #            st.dataframe(processed_resp, use_container_width=True)
 
 

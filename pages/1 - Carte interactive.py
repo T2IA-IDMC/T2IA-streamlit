@@ -56,8 +56,13 @@ def change_coord(bbox):
 
 # Fonction de mise à jour lorsqu'un point est cliqué
 def update_selection(index):
-    st.session_state['selected_location'] = ocr_locations.loc[index, ...]
+    st.session_state['selected_location'] = st.session_state.ocr_locations.loc[index, ...]
     st.session_state['selected_image_index'] = 1  # Réinitialiser à la première image
+
+
+def reset_selection():
+    st.session_state['selected_location'] = None
+    st.session_state['selected_image_index'] = 0
 
 
 def adresses_only(list_address):
@@ -70,6 +75,26 @@ def adresses_only(list_address):
 
 def get_camembert_tagged(camembert_res, word_tag):
     return [ent['word'] for ent in camembert_res if ent['entity_group'] == word_tag]
+
+
+def update_map_layer():
+    """Mise à jour des couleurs en fonction de la sélection"""
+    layer = pdk.Layer(
+        'ScatterplotLayer',
+        data=st.session_state.ocr_locations,
+        id="cities",
+        get_position=['longitude', 'latitude'],
+        get_color=dict_colors[st.session_state['display_color']],
+        get_radius='size',
+        pickable=True,
+    )
+    st.session_state.map_deck.layers[0] = layer
+
+
+def update_map_theme():
+    """Mise à jour du thème de la carte"""
+    st.session_state.map_deck.map_style = st.session_state.map_style
+
 
 
 # ajouts pour les tags
@@ -138,6 +163,18 @@ def get_size_n_color(ocr_locations, normalizer, quantiles, a=20000, b=2000):
 
     return pd.concat([col_size, col_cnt_color], axis=1)
 
+
+def update_lists():
+    st.session_state['region_list'] = st.session_state.ocr_locations[['region_name']].sort_values(by='region_name') \
+                                                                                     .drop_duplicates(ignore_index=True)
+    st.session_state['dep_list'] = st.session_state.ocr_locations[['region_name', 'department_name']] \
+                                                   .sort_values(by=['region_name', 'department_name']) \
+                                                   .drop_duplicates(ignore_index=True)
+    st.session_state['city_list'] = st.session_state.ocr_locations[['region_name', 'department_name', 'city_code']] \
+                                                    .sort_values(by=['region_name', 'department_name', 'city_code']) \
+                                                    .drop_duplicates(ignore_index=True)
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Variables
 # ----------------------------------------------------------------------------------------------------------------------
@@ -153,6 +190,11 @@ dict_box_color = {
     90: 'yellow',
     180: 'blue',
     270: 'green',
+}
+
+dict_map_theme = {
+    'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json': ':material/light_mode:',
+    'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json': ':material/dark_mode:',
 }
 
 # dictionnaire des tags
@@ -182,11 +224,12 @@ if 'ocr_results' not in st.session_state:
     ocr_results['classes'] = get_img_classes(ocr_results, 'data/images/classification.json')
     # sauvegarde
     st.session_state.ocr_results = ocr_results
+    st.session_state.ocr_results_base = ocr_results
 else:
     ocr_results = st.session_state.ocr_results
 
 if 'ocr_locations' not in st.session_state:
-    ocr_locations = locations_from_results(st.session_state.ocr_results, st.session_state.df_cities)
+    ocr_locations = locations_from_results(st.session_state.ocr_results_base, st.session_state.df_cities)
 
     norm = MinMaxScaler().fit(ocr_locations['count'].values.reshape(-1, 1))
     st.session_state.normalizer = norm
@@ -197,20 +240,20 @@ if 'ocr_locations' not in st.session_state:
                                                             st.session_state.normalizer,
                                                             st.session_state.quantiles)
 
-    st.session_state.ocr_location = ocr_locations
+    st.session_state.ocr_locations = ocr_locations
 else:
     ocr_locations = st.session_state.ocr_locations
 
 
 # Initialiser l'état de l'application si non défini
+if 'tag_selection' not in st.session_state:
+    st.session_state['tag_selection'] = None
 if 'selected_location' not in st.session_state:
     st.session_state['selected_location'] = None
 if 'selected_image_index' not in st.session_state:
     st.session_state['selected_image_index'] = 0
 if 'display_color' not in st.session_state:
     st.session_state['display_color'] = list(dict_colors.keys())[0]
-if 'map_style' not in st.session_state:
-    st.session_state['map_style'] = 'Light'
 if 'region_list' not in st.session_state:
     st.session_state['region_list'] = ocr_locations[['region_name']].sort_values(by='region_name')\
                                                                     .drop_duplicates(ignore_index=True)
@@ -228,48 +271,54 @@ if 'city_list' not in st.session_state:
 # Carte
 # ----------------------------------------------------------------------------------------------------------------------
 # Création de la carte Pydeck
-layer = pdk.Layer(
-    'ScatterplotLayer',
-    data=ocr_locations,
-    id="cities",
-    get_position=['longitude', 'latitude'],
-    get_color=dict_colors[st.session_state['display_color']],
-    get_radius='size',
-    pickable=True,
-)
+if 'map_deck' not in st.session_state:
+    layer = pdk.Layer(
+        'ScatterplotLayer',
+        data=ocr_locations,
+        id="cities",
+        get_position=['longitude', 'latitude'],
+        get_color=dict_colors[st.session_state['display_color']],
+        get_radius='size',
+        pickable=True,
+    )
 
-view_state = pdk.ViewState(
-    latitude=ocr_locations['latitude'].mean(),
-    longitude=ocr_locations['longitude'].mean(),
-    controller=True,
-    zoom=6)
+    view_state = pdk.ViewState(
+        latitude=ocr_locations['latitude'].mean(),
+        longitude=ocr_locations['longitude'].mean(),
+        controller=True,
+        zoom=6)
 
-map_deck = pdk.Deck(
-    layers=[layer],
-    initial_view_state=view_state,
-    map_style=st.session_state['map_style'].lower(),
-    tooltip={'html': "<b>{city_code}</b><br><b>{count}</b> postcards", 'style': {'backgroundColor': 'steelblue', 'color': 'white'}},
-)
+    st.session_state.map_deck = pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        map_style='light',
+        tooltip={'html': "<b>{city_code}</b><br><b>{count}</b> postcards", 'style': {'backgroundColor': 'steelblue', 'color': 'white'}},
+    )
 
 # Affichage de la carte
-title_col, map_st_col, color_col = st.columns([0.6, 0.2, 0.2])
+title_col, map_st_col, color_col = st.columns([0.7, 0.1, 0.2])
 with title_col:
     st.title("Carte interactive")
 with map_st_col:
-    st.selectbox(
+    st.pills(
         "Style de carte :",
-        ['Light', 'Dark'],
+        options=dict_map_theme.keys(),
+        format_func=lambda option: dict_map_theme[option],
+        default='https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
         key='map_style',
+        on_change=update_map_theme,
+        label_visibility='hidden',
     )
 with color_col:
     st.selectbox(
         "Couleur des points :",
         dict_colors.keys(),
         key='display_color',
+        on_change=update_map_layer,
     )
 
 clicked_data = st.pydeck_chart(
-    map_deck,
+    st.session_state.map_deck,
     on_select="rerun",
 )  # Récupérer les données du clic
 
@@ -292,6 +341,38 @@ else:
     dep_index = None
     city_list = st.session_state.city_list
     city_index = None
+
+
+
+# sélection par tag
+option_map = {
+    tag: f":{dict_tags[tag]['color']}[{dict_tags[tag]['emoji']} {tag}]" for tag in dict_tags.keys()
+}
+
+
+def on_change_maj_map():
+    tag_selection = st.session_state.tag_selection
+    ocr_locations = locations_from_results(st.session_state.ocr_results_base, st.session_state.df_cities, tags=tag_selection)
+    ocr_locations[['size', 'cnt_color']] = get_size_n_color(ocr_locations,
+                                                            st.session_state.normalizer,
+                                                            st.session_state.quantiles)
+    st.session_state.ocr_locations = ocr_locations
+
+    update_map_layer()
+    reset_selection()
+    update_lists()
+
+
+
+tag_selection = st.pills(
+    "Tags",
+    options=option_map.keys(),
+    format_func=lambda option: option_map[option],
+    selection_mode="single",
+    on_change=on_change_maj_map,
+    key="tag_selection"
+)
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -341,8 +422,16 @@ with col_city:
     )
 
 if selected_point is not None:
+    ocr_locations = locations_from_results(
+        st.session_state.ocr_results_base,
+        st.session_state.df_cities,
+        tags=st.session_state.tag_selection
+    )
+
     update_selection(
-            ocr_locations[ocr_locations['city_code'] == selected_point].index[0]
+            ocr_locations[
+                ocr_locations['city_code'] == selected_point
+            ].index[0]
         )
 
 
@@ -352,6 +441,8 @@ if selected_point is not None:
 # Affichage des images du lieu sélectionné
 if st.session_state['selected_location'] is not None:
     loc = st.session_state['selected_location']
+    ocr_results = get_imgs_by_tags(st.session_state.ocr_results_base, tag_selection)
+    st.session_state.ocr_results = ocr_results
     images = loc['img_path']
 
     st.subheader(loc['city_code'])
@@ -387,10 +478,10 @@ if st.session_state['selected_location'] is not None:
         if len(img_tags) > 0:
             tag_markdown = ""
             for tag in img_tags:
-                tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}]"
+                tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}] "
         else:
             tag_markdown = ":gray-badge[☹️ no tag]"
-        st.markdown(tag_markdown)
+        st.markdown(tag_markdown.strip())
 
         # Affichage de l'image sélectionnée
         st.image(image, caption=f"Image : {img_name}")
