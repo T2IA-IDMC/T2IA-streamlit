@@ -245,6 +245,15 @@ else:
     ocr_locations = st.session_state.ocr_locations
 
 
+# mots-clés
+if 'df_kw_by_tag' not in st.session_state:
+    df_kw_by_tag = pd.read_json('data/keywords/keywords_by_class.json')
+    st.session_state.df_kw_by_tag = df_kw_by_tag
+if 'img_keywords' not in st.session_state:
+    img_keywords = pd.read_json('data/keywords/img_full_keywords_v1.json')
+    st.session_state.img_keywords = img_keywords
+
+
 # Initialiser l'état de l'application si non défini
 if 'tag_selection' not in st.session_state:
     st.session_state['tag_selection'] = None
@@ -472,16 +481,44 @@ if st.session_state['selected_location'] is not None:
     tab_img, tab_ocr, tab_bert = st.tabs(["Image", "OCR", "CamemBERT"])
 
     with tab_img:
-        # affichage des tags
-        img_tags = img_results.classes.values[0]
+        col_tags, col_kw = st.columns(2)
+        with col_tags:
+            # affichage des tags
+            img_tags = img_results.classes.values[0]
 
-        if len(img_tags) > 0:
-            tag_markdown = ""
-            for tag in img_tags:
-                tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}] "
-        else:
-            tag_markdown = ":gray-badge[☹️ no tag]"
-        st.markdown(tag_markdown.strip())
+            tag_markdown = "Tags: "
+
+            if len(img_tags) > 0:
+                for tag in img_tags:
+                    tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}] "
+            else:
+                tag_markdown += ":gray-badge[☹️ no tag]"
+            st.markdown(tag_markdown.strip())
+
+        with col_kw:
+            # affichage des mots-clés
+            kws_markdown = "Keywords: "
+            if img_name in st.session_state.img_keywords.index:
+                img_kws = st.session_state.img_keywords.loc[img_name]
+
+                if img_kws.predicted:
+                    dict_kw_pred = img_kws.pred_keywords
+                    kws_markdown = "Predicted " + kws_markdown
+                    for kw in img_kws.keywords:
+                        if dict_kw_pred[kw] < 0.75:
+                            kws_markdown += ":red"
+                        elif dict_kw_pred[kw] < 0.90:
+                            kws_markdown += ":orange"
+                        else:
+                            kws_markdown += ":green"
+                        kws_markdown += f"-badge[{kw} ({dict_kw_pred[kw]:.0%})] "
+                else:
+                    for kw in img_kws.keywords:
+                        kws_markdown += f":blue-badge[{kw}] "
+            else:
+                kws_markdown += ":gray-badge[no keyword]"
+            st.markdown(kws_markdown.strip())
+
 
         # Affichage de l'image sélectionnée
         st.image(image, caption=f"Image : {img_name}")
