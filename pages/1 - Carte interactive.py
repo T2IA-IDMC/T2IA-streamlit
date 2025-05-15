@@ -292,8 +292,8 @@ if 'map_deck' not in st.session_state:
     )
 
     view_state = pdk.ViewState(
-        latitude=ocr_locations['latitude'].mean(),
-        longitude=ocr_locations['longitude'].mean(),
+        latitude=ocr_locations.head(20)['latitude'].mean(),
+        longitude=ocr_locations.head(20)['longitude'].mean(),
         controller=True,
         zoom=6)
 
