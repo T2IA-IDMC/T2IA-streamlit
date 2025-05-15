@@ -206,7 +206,7 @@ with open('data/images/classes.json', 'r') as f:
 # ----------------------------------------------------------------------------------------------------------------------
 # chargement des df
 if 'df_cities' not in st.session_state:
-    df_cities = pd.read_csv('data/ocr/OCR_locations_v2.csv')
+    df_cities = pd.read_csv('data/ocr/OCR_locations_v3.csv')
     df_cities = df_cities.drop(columns=['img_name', 'img_path', 'count', 'size', 'cnt_color']).map(eval_str_lists)
     st.session_state['df_cities'] = df_cities
 else:
@@ -214,7 +214,7 @@ else:
 
 # TODO : possibilité de modifier le chemin du DataSet ?
 if 'ocr_results' not in st.session_state:
-    ocr_results = pd.read_csv('data/ocr/OCR_results_v2.csv')
+    ocr_results = pd.read_csv('data/ocr/OCR_results_v3.csv')
     ocr_results[
         [col for col in ocr_results.columns if col != 'text']
     ] = ocr_results[[col for col in ocr_results.columns if col != 'text']].map(eval_str_lists)
