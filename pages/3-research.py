@@ -17,11 +17,6 @@ import json
 state = st.session_state
 dict_lang = state.dict_lang[state.selected_lang]
 
-# Display the selected language and its code
-st.markdown(f"Selected Language: {state["selected_lang"]}")
-st.markdown(f"Language Code: {st.query_params['lang']}")
-
-
 st.title("Recherche par mots-clés")
 # ----------------------------------------------------------------------------------------------------------------------
 # Fonctions
@@ -103,13 +98,15 @@ with st.container(border=True):
                     field_name.capitalize(),
                     set(state.df_retrieval[field_name].sum()),
                     format_func=lambda x: f"{dict_tags[x]['emoji']} {x}",
-                    key=f'research_kw_{field_name}'
+                    key=f'research_kw_{field_name}',
+                    placeholder=dict_lang["choose_option"]
                 )
             else:
                 research_dict[field_name]['research_kw'] = st.multiselect(
                     field_name.capitalize(),
                     set(state.df_retrieval[field_name].sum()),
-                    key=f'research_kw_{field_name}'
+                    key=f'research_kw_{field_name}',
+                    placeholder=dict_lang["choose_option"]
                 )
 
 # ----------------------------------------------------------------------------------------------------------------------

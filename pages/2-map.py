@@ -402,6 +402,7 @@ with col_region:
         f"{dict_lang['2-region']}:",
         state.region_list['region_name'],
         index=region_index,
+        placeholder=dict_lang["choose_option"]
     )
     if selected_reg is not None:
         dep_list = state.dep_list[state.dep_list['region_name'] == selected_reg].reset_index(drop=True)
@@ -420,6 +421,7 @@ with col_dep:
         f"{dict_lang['2-department']}:",
         dep_list['department_name'],
         index=dep_index,
+        placeholder=dict_lang["choose_option"]
     )
     if selected_dep is not None:
         city_list = state.city_list[state.city_list['department_name'] == selected_dep].reset_index(drop=True)
@@ -433,6 +435,7 @@ with col_city:
         f"{dict_lang['2-town']}:",
         city_list['city_code'],
         index=city_index,
+        placeholder=dict_lang["choose_option"]
     )
 
 if selected_point is not None:
@@ -447,6 +450,7 @@ if selected_point is not None:
                 ocr_locations['city_code'] == selected_point
             ].index[0]
         )
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------

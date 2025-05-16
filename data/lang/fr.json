@@ -1,5 +1,5 @@
 {
-  "1-home": "Accueil",
+  "1-home": "Page d'accueil",
   "2-map": "Carte interactive",
   "3-research": "Recherche par mots-cl\u00e9s",
   "4-pipeline": "Pipeline YOLO2-GPT",
@@ -27,6 +27,7 @@
 
 
   "choose_image": "Choisissez une image :",
+  "choose_option": "Choisissez une option",
 
 
   "tags": "\u00c9tiquettes :",
