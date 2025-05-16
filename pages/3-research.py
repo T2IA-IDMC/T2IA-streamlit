@@ -10,9 +10,17 @@ from pathlib import Path
 from streamlit_image_select import image_select
 import json
 
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 # logos de la sidebar
-st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
+#st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
+
+state = st.session_state
+dict_lang = state.dict_lang[state.selected_lang]
+
+# Display the selected language and its code
+st.markdown(f"Selected Language: {state["selected_lang"]}")
+st.markdown(f"Language Code: {st.query_params['lang']}")
+
 
 st.title("Recherche par mots-clés")
 # ----------------------------------------------------------------------------------------------------------------------
@@ -69,9 +77,9 @@ research_dict = {
 # Session
 # ----------------------------------------------------------------------------------------------------------------------
 # chargement des df
-if 'df_retrieval' not in st.session_state:
-    st.session_state.df_retrieval = pd.read_json('data/keywords/df_retrieval.json')
-    st.session_state.df_retrieval.set_index('img_name', inplace=True)
+if 'df_retrieval' not in state:
+    state.df_retrieval = pd.read_json('data/keywords/df_retrieval.json')
+    state.df_retrieval.set_index('img_name', inplace=True)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -93,21 +101,21 @@ with st.container(border=True):
             if field_name == 'tag':
                 research_dict[field_name]['research_kw'] = st.multiselect(
                     field_name.capitalize(),
-                    set(st.session_state.df_retrieval[field_name].sum()),
+                    set(state.df_retrieval[field_name].sum()),
                     format_func=lambda x: f"{dict_tags[x]['emoji']} {x}",
                     key=f'research_kw_{field_name}'
                 )
             else:
                 research_dict[field_name]['research_kw'] = st.multiselect(
                     field_name.capitalize(),
-                    set(st.session_state.df_retrieval[field_name].sum()),
+                    set(state.df_retrieval[field_name].sum()),
                     key=f'research_kw_{field_name}'
                 )
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Affichage
 # ----------------------------------------------------------------------------------------------------------------------
-selected_images = find_from_dict(st.session_state.df_retrieval, research_dict)
+selected_images = find_from_dict(state.df_retrieval, research_dict)
 selected_nb = selected_images.shape[0]
 pages_nb = selected_nb // 6 + 1 if selected_nb % 6 != 0 else selected_nb // 6
 

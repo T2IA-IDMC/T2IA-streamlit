@@ -1,0 +1,50 @@
+{
+  "1-home": "Home",
+  "2-map": "Interactive map",
+  "3-research": "Keyword search",
+  "4-pipeline": "Pipeline YOLO2-GPT",
+  "language": "Language",
+
+
+  "1-project_title": "Archival image processing with artificial intelligence",
+
+
+  "2-density": "Densities",
+  "2-region": "Regions",
+  "2-department": "Departments",
+  "2-town": "Towns",
+  "2-points_color": "Points coloration:",
+  "2-select_location": "Select a location:",
+  "2-confidence": "Confidence:",
+  "text": "OCR results",
+  "camembert_loc": "Detected locations",
+  "address": "Detected adresses",
+  "PER": "Persons",
+  "ORG": "Organisations",
+  "camembert_date" : "Detected dates",
+  "MISC": "Miscellaneous",
+
+
+  "choose_image": "Choose an image:",
+
+
+  "tags": "Tags:",
+  "urban": "Urban",
+  "rural": "Rural",
+  "destruction": "Destruction",
+  "landscape": "Landscape",
+  "monuments": "Monument",
+  "person": "Person",
+  "religion": "Religion",
+  "work": "Work",
+  "public building": "Public building",
+  "art": "Art",
+  "no tag": "No tag",
+
+
+  "keywords": "Keywords:",
+
+
+  "and": "and",
+  "or": "or"
+}

@@ -11,10 +11,12 @@ from PIL import Image, ImageDraw
 from sklearn.preprocessing import MinMaxScaler
 import json
 
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 # logos de la sidebar
-st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
+#st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
 
+state = st.session_state
+dict_lang = state.dict_lang[state.selected_lang]
 # ----------------------------------------------------------------------------------------------------------------------
 # Fonctions
 # ----------------------------------------------------------------------------------------------------------------------
@@ -56,13 +58,13 @@ def change_coord(bbox):
 
 # Fonction de mise à jour lorsqu'un point est cliqué
 def update_selection(index):
-    st.session_state['selected_location'] = st.session_state.ocr_locations.loc[index, ...]
-    st.session_state['selected_image_index'] = 1  # Réinitialiser à la première image
+    state['selected_location'] = state.ocr_locations.loc[index, ...]
+    state['selected_image_index'] = 1  # Réinitialiser à la première image
 
 
 def reset_selection():
-    st.session_state['selected_location'] = None
-    st.session_state['selected_image_index'] = 0
+    state['selected_location'] = None
+    state['selected_image_index'] = 0
 
 
 def adresses_only(list_address):
@@ -79,21 +81,23 @@ def get_camembert_tagged(camembert_res, word_tag):
 
 def update_map_layer():
     """Mise à jour des couleurs en fonction de la sélection"""
-    layer = pdk.Layer(
-        'ScatterplotLayer',
-        data=st.session_state.ocr_locations,
-        id="cities",
-        get_position=['longitude', 'latitude'],
-        get_color=dict_colors[st.session_state['display_color']],
-        get_radius='size',
-        pickable=True,
-    )
-    st.session_state.map_deck.layers[0] = layer
+    if "ocr_locations" in state:
+        layer = pdk.Layer(
+            'ScatterplotLayer',
+            data=state.ocr_locations,
+            id="cities",
+            get_position=['longitude', 'latitude'],
+            get_color=dict_colors[state['display_color']],
+            get_radius='size',
+            pickable=True,
+        )
+        state.map_deck.layers[0] = layer
 
 
 def update_map_theme():
     """Mise à jour du thème de la carte"""
-    st.session_state.map_deck.map_style = st.session_state.map_style
+    if "map_style" in state:
+        state.map_deck.map_style = state.map_style
 
 
 
@@ -165,12 +169,12 @@ def get_size_n_color(ocr_locations, normalizer, quantiles, a=20000, b=2000):
 
 
 def update_lists():
-    st.session_state['region_list'] = st.session_state.ocr_locations[['region_name']].sort_values(by='region_name') \
+    state['region_list'] = state.ocr_locations[['region_name']].sort_values(by='region_name') \
                                                                                      .drop_duplicates(ignore_index=True)
-    st.session_state['dep_list'] = st.session_state.ocr_locations[['region_name', 'department_name']] \
+    state['dep_list'] = state.ocr_locations[['region_name', 'department_name']] \
                                                    .sort_values(by=['region_name', 'department_name']) \
                                                    .drop_duplicates(ignore_index=True)
-    st.session_state['city_list'] = st.session_state.ocr_locations[['region_name', 'department_name', 'city_code']] \
+    state['city_list'] = state.ocr_locations[['region_name', 'department_name', 'city_code']] \
                                                     .sort_values(by=['region_name', 'department_name', 'city_code']) \
                                                     .drop_duplicates(ignore_index=True)
 
@@ -180,9 +184,9 @@ def update_lists():
 # ----------------------------------------------------------------------------------------------------------------------
 # dictionnaire des couleurs pour la carte
 dict_colors = {
-    'Densités': 'cnt_color',
-    'Régions': 'region_color',
-    'Départements': 'department_color',
+    dict_lang["2-density"]: 'cnt_color',
+    dict_lang["2-region"]: 'region_color',
+    dict_lang["2-department"]: 'department_color',
 }
 
 dict_box_color = {
@@ -205,15 +209,15 @@ with open('data/images/classes.json', 'r') as f:
 # Session
 # ----------------------------------------------------------------------------------------------------------------------
 # chargement des df
-if 'df_cities' not in st.session_state:
+if 'df_cities' not in state:
     df_cities = pd.read_csv('data/ocr/OCR_locations_v3.csv')
     df_cities = df_cities.drop(columns=['img_name', 'img_path', 'count', 'size', 'cnt_color']).map(eval_str_lists)
-    st.session_state['df_cities'] = df_cities
+    state['df_cities'] = df_cities
 else:
-    df_cities = st.session_state['df_cities']
+    df_cities = state['df_cities']
 
 # TODO : possibilité de modifier le chemin du DataSet ?
-if 'ocr_results' not in st.session_state:
+if 'ocr_results' not in state:
     ocr_results = pd.read_csv('data/ocr/OCR_results_v3.csv')
     ocr_results[
         [col for col in ocr_results.columns if col != 'text']
@@ -223,55 +227,55 @@ if 'ocr_results' not in st.session_state:
     # classes des images :
     ocr_results['classes'] = get_img_classes(ocr_results, 'data/images/classification.json')
     # sauvegarde
-    st.session_state.ocr_results = ocr_results
-    st.session_state.ocr_results_base = ocr_results
+    state.ocr_results = ocr_results
+    state.ocr_results_base = ocr_results
 else:
-    ocr_results = st.session_state.ocr_results
+    ocr_results = state.ocr_results
 
-if 'ocr_locations' not in st.session_state:
-    ocr_locations = locations_from_results(st.session_state.ocr_results_base, st.session_state.df_cities)
+if 'ocr_locations' not in state:
+    ocr_locations = locations_from_results(state.ocr_results_base, state.df_cities)
 
     norm = MinMaxScaler().fit(ocr_locations['count'].values.reshape(-1, 1))
-    st.session_state.normalizer = norm
+    state.normalizer = norm
     quantiles = np.quantile(ocr_locations['count'].unique(), np.linspace(0.1, 1, 10)).tolist()
-    st.session_state.quantiles = quantiles
+    state.quantiles = quantiles
 
     ocr_locations[['size', 'cnt_color']] = get_size_n_color(ocr_locations,
-                                                            st.session_state.normalizer,
-                                                            st.session_state.quantiles)
+                                                            state.normalizer,
+                                                            state.quantiles)
 
-    st.session_state.ocr_locations = ocr_locations
+    state.ocr_locations = ocr_locations
 else:
-    ocr_locations = st.session_state.ocr_locations
+    ocr_locations = state.ocr_locations
 
 
 # mots-clés
-if 'df_kw_by_tag' not in st.session_state:
+if 'df_kw_by_tag' not in state:
     df_kw_by_tag = pd.read_json('data/keywords/keywords_by_class.json')
-    st.session_state.df_kw_by_tag = df_kw_by_tag
-if 'img_keywords' not in st.session_state:
+    state.df_kw_by_tag = df_kw_by_tag
+if 'img_keywords' not in state:
     img_keywords = pd.read_json('data/keywords/img_full_keywords_v1.json')
-    st.session_state.img_keywords = img_keywords
+    state.img_keywords = img_keywords
 
 
 # Initialiser l'état de l'application si non défini
-if 'tag_selection' not in st.session_state:
-    st.session_state['tag_selection'] = None
-if 'selected_location' not in st.session_state:
-    st.session_state['selected_location'] = None
-if 'selected_image_index' not in st.session_state:
-    st.session_state['selected_image_index'] = 0
-if 'display_color' not in st.session_state:
-    st.session_state['display_color'] = list(dict_colors.keys())[0]
-if 'region_list' not in st.session_state:
-    st.session_state['region_list'] = ocr_locations[['region_name']].sort_values(by='region_name')\
+if 'tag_selection' not in state:
+    state['tag_selection'] = None
+if 'selected_location' not in state:
+    state['selected_location'] = None
+if 'selected_image_index' not in state:
+    state['selected_image_index'] = 0
+if 'display_color' not in state:
+    state['display_color'] = list(dict_colors.keys())[0]
+if 'region_list' not in state:
+    state['region_list'] = ocr_locations[['region_name']].sort_values(by='region_name')\
                                                                     .drop_duplicates(ignore_index=True)
-if 'dep_list' not in st.session_state:
-    st.session_state['dep_list'] = ocr_locations[['region_name', 'department_name']]\
+if 'dep_list' not in state:
+    state['dep_list'] = ocr_locations[['region_name', 'department_name']]\
                                                 .sort_values(by=['region_name', 'department_name'])\
                                                 .drop_duplicates(ignore_index=True)
-if 'city_list' not in st.session_state:
-    st.session_state['city_list'] = ocr_locations[['region_name', 'department_name', 'city_code']]\
+if 'city_list' not in state:
+    state['city_list'] = ocr_locations[['region_name', 'department_name', 'city_code']]\
                                                     .sort_values(by=['region_name', 'department_name', 'city_code'])\
                                                     .drop_duplicates(ignore_index=True)
 
@@ -280,13 +284,13 @@ if 'city_list' not in st.session_state:
 # Carte
 # ----------------------------------------------------------------------------------------------------------------------
 # Création de la carte Pydeck
-if 'map_deck' not in st.session_state:
+if 'map_deck' not in state:
     layer = pdk.Layer(
         'ScatterplotLayer',
         data=ocr_locations,
         id="cities",
         get_position=['longitude', 'latitude'],
-        get_color=dict_colors[st.session_state['display_color']],
+        get_color=dict_colors[state['display_color']],
         get_radius='size',
         pickable=True,
     )
@@ -297,7 +301,7 @@ if 'map_deck' not in st.session_state:
         controller=True,
         zoom=6)
 
-    st.session_state.map_deck = pdk.Deck(
+    state.map_deck = pdk.Deck(
         layers=[layer],
         initial_view_state=view_state,
         map_style='light',
@@ -307,7 +311,7 @@ if 'map_deck' not in st.session_state:
 # Affichage de la carte
 title_col, map_st_col, color_col = st.columns([0.7, 0.1, 0.2])
 with title_col:
-    st.title("Carte interactive")
+    st.title(dict_lang["2-map"])
 with map_st_col:
     st.pills(
         "Style de carte :",
@@ -320,14 +324,14 @@ with map_st_col:
     )
 with color_col:
     st.selectbox(
-        "Couleur des points :",
+        dict_lang["2-points_color"],
         dict_colors.keys(),
         key='display_color',
         on_change=update_map_layer,
     )
 
 clicked_data = st.pydeck_chart(
-    st.session_state.map_deck,
+    state.map_deck,
     on_select="rerun",
 )  # Récupérer les données du clic
 
@@ -339,42 +343,43 @@ if len(selected_object) != 0:
     selected_department = selected_object['cities'][0]['department_name']
     selected_city = selected_object['cities'][0]['city_code']
     region_index = get_index(selected_region,
-                             st.session_state.region_list,
+                             state.region_list,
                              'region_name')
 else:
     selected_region = None
     selected_department = None
     selected_city = None
     region_index = None
-    dep_list = st.session_state.dep_list
+    dep_list = state.dep_list
     dep_index = None
-    city_list = st.session_state.city_list
+    city_list = state.city_list
     city_index = None
 
 
 
 # sélection par tag
 option_map = {
-    tag: f":{dict_tags[tag]['color']}[{dict_tags[tag]['emoji']} {tag}]" for tag in dict_tags.keys()
+    tag: f":{dict_tags[tag]['color']}[{dict_tags[tag]['emoji']} {dict_lang[tag]}]" for tag in dict_tags.keys()
 }
 
 
 def on_change_maj_map():
-    tag_selection = st.session_state.tag_selection
-    ocr_locations = locations_from_results(st.session_state.ocr_results_base, st.session_state.df_cities, tags=tag_selection)
-    ocr_locations[['size', 'cnt_color']] = get_size_n_color(ocr_locations,
-                                                            st.session_state.normalizer,
-                                                            st.session_state.quantiles)
-    st.session_state.ocr_locations = ocr_locations
+    if "tag_selection" in state:
+        tag_selection = state.tag_selection
+        ocr_locations = locations_from_results(state.ocr_results_base, state.df_cities, tags=tag_selection)
+        ocr_locations[['size', 'cnt_color']] = get_size_n_color(ocr_locations,
+                                                                state.normalizer,
+                                                                state.quantiles)
+        state.ocr_locations = ocr_locations
 
-    update_map_layer()
-    reset_selection()
-    update_lists()
+        update_map_layer()
+        reset_selection()
+        update_lists()
 
 
 
 tag_selection = st.pills(
-    "Tags",
+    dict_lang["tags"],
     options=option_map.keys(),
     format_func=lambda option: option_map[option],
     selection_mode="single",
@@ -389,22 +394,22 @@ tag_selection = st.pills(
 # ----------------------------------------------------------------------------------------------------------------------
 # Sélection d'un lieu
 # 3 colonnes : région/département/ville → la couleur devra changer à chaque sélection
-st.subheader("Sélectionnez un lieu :")
+st.subheader(dict_lang["2-select_location"])
 col_region, col_dep, col_city = st.columns(3)
 
 with col_region:
     selected_reg = st.selectbox(
-        "Région :",
-        st.session_state.region_list['region_name'],
+        f"{dict_lang['2-region']}:",
+        state.region_list['region_name'],
         index=region_index,
     )
     if selected_reg is not None:
-        dep_list = st.session_state.dep_list[st.session_state.dep_list['region_name'] == selected_reg].reset_index(drop=True)
+        dep_list = state.dep_list[state.dep_list['region_name'] == selected_reg].reset_index(drop=True)
         if selected_department is not None:
             dep_index = get_index(selected_department,
                                   dep_list,
                                   'department_name')
-        city_list = st.session_state.city_list[st.session_state.city_list['region_name'] == selected_reg].reset_index(drop=True)
+        city_list = state.city_list[state.city_list['region_name'] == selected_reg].reset_index(drop=True)
         if selected_city is not None:
             city_index = get_index(selected_city,
                                    city_list,
@@ -412,12 +417,12 @@ with col_region:
 
 with col_dep:
     selected_dep = st.selectbox(
-        "Département :",
+        f"{dict_lang['2-department']}:",
         dep_list['department_name'],
         index=dep_index,
     )
     if selected_dep is not None:
-        city_list = st.session_state.city_list[st.session_state.city_list['department_name'] == selected_dep].reset_index(drop=True)
+        city_list = state.city_list[state.city_list['department_name'] == selected_dep].reset_index(drop=True)
         if selected_city is not None:
             city_index = get_index(selected_city,
                                    city_list,
@@ -425,16 +430,16 @@ with col_dep:
 
 with col_city:
     selected_point = st.selectbox(
-        "Ville :",
+        f"{dict_lang['2-town']}:",
         city_list['city_code'],
         index=city_index,
     )
 
 if selected_point is not None:
     ocr_locations = locations_from_results(
-        st.session_state.ocr_results_base,
-        st.session_state.df_cities,
-        tags=st.session_state.tag_selection
+        state.ocr_results_base,
+        state.df_cities,
+        tags=state.tag_selection
     )
 
     update_selection(
@@ -448,10 +453,10 @@ if selected_point is not None:
 # Affichage
 # ----------------------------------------------------------------------------------------------------------------------
 # Affichage des images du lieu sélectionné
-if st.session_state['selected_location'] is not None:
-    loc = st.session_state['selected_location']
-    ocr_results = get_imgs_by_tags(st.session_state.ocr_results_base, tag_selection)
-    st.session_state.ocr_results = ocr_results
+if state['selected_location'] is not None:
+    loc = state['selected_location']
+    ocr_results = get_imgs_by_tags(state.ocr_results_base, tag_selection)
+    state.ocr_results = ocr_results
     images = loc['img_path']
 
     st.subheader(loc['city_code'])
@@ -459,18 +464,18 @@ if st.session_state['selected_location'] is not None:
     # Sélecteur d'image avec un slider
     if len(images) > 1:
         image_index = st.slider(
-            "Choisissez une image",
+            dict_lang['choose_image'],
             min_value=1,
             max_value=len(images),
-            value=st.session_state['selected_image_index']
+            value=state['selected_image_index']
         )
     else:
-        st.session_state['selected_image_index'] = 1
+        state['selected_image_index'] = 1
         image_index = 1
 
 
     # Mise à jour de l'image sélectionnée dans l'état de session
-    st.session_state['selected_image_index'] = image_index
+    state['selected_image_index'] = image_index
 
     # caractéristiques de l'image
     img_path = images[image_index - 1]
@@ -486,24 +491,27 @@ if st.session_state['selected_location'] is not None:
             # affichage des tags
             img_tags = img_results.classes.values[0]
 
-            tag_markdown = "Tags: "
+            tag_markdown = f"{dict_lang['tags']} "
 
             if len(img_tags) > 0:
                 for tag in img_tags:
-                    tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}] "
+                    tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {dict_lang[tag]}] "
             else:
-                tag_markdown += ":gray-badge[☹️ no tag]"
+                tag_markdown += f":gray-badge[☹️ {dict_lang['no tag']}]"
             st.markdown(tag_markdown.strip())
 
         with col_kw:
             # affichage des mots-clés
-            kws_markdown = "Keywords: "
-            if img_name in st.session_state.img_keywords.index:
-                img_kws = st.session_state.img_keywords.loc[img_name]
+            kws_markdown = f"{dict_lang['keywords']} "
+            if img_name in state.img_keywords.index:
+                img_kws = state.img_keywords.loc[img_name]
 
                 if img_kws.predicted:
                     dict_kw_pred = img_kws.pred_keywords
-                    kws_markdown = "Predicted " + kws_markdown
+                    if state.selected_lang == 'en':
+                        kws_markdown = "Predicted " + kws_markdown
+                    elif state.selected_lang == 'fr':
+                        kws_markdown = kws_markdown[:-2] + "prédits : "
                     for kw in img_kws.keywords:
                         if dict_kw_pred[kw] < 0.75:
                             kws_markdown += ":red"
@@ -569,7 +577,7 @@ if st.session_state['selected_location'] is not None:
                     with col_text:
                         st.markdown(f"<p style='font-size:32px;text-align:center;'>{text}</p>", unsafe_allow_html=True)
                     with col_conf:
-                        st.caption(f"<p style='text-align:right;'><br>(Confiance : {conf*100:.0f} %)</p>", unsafe_allow_html=True)
+                        st.caption(f"<p style='text-align:right;'><br>({dict_lang["2-confidence"]} {conf*100:.0f} %)</p>", unsafe_allow_html=True)
 
     with tab_bert:
         img_results['address'] = img_results['affilgood_address'].apply(adresses_only)
@@ -577,16 +585,16 @@ if st.session_state['selected_location'] is not None:
         st.dataframe(
             img_results[['text', 'camembert_loc', 'address']]\
                        .rename(columns={
-                'text': 'Résultats d\'OCR',
-                'camembert_loc': 'Lieux détectés',
-                'address': 'Adresses détectées'
+                'text': dict_lang['text'],
+                'camembert_loc': dict_lang['camembert_loc'],
+                'address': dict_lang['address']
             }),
             hide_index=True,
             use_container_width=True,
             column_config = {
-                "Résultats d\'OCR": st.column_config.Column("Résultats d\'OCR", width="medium"),
-                "Lieux détectés": st.column_config.Column("Lieux détectés", width="small"),
-                "Adresses détectées": st.column_config.Column("Adresses détectées", width="small")
+                dict_lang['text']: st.column_config.Column(dict_lang['text'], width="medium"),
+                dict_lang['camembert_loc']: st.column_config.Column(dict_lang['camembert_loc'], width="small"),
+                dict_lang['address']: st.column_config.Column(dict_lang['address'], width="small")
             }
         )
 
@@ -596,36 +604,36 @@ if st.session_state['selected_location'] is not None:
         for tag in other_tags:
             img_results[tag] = img_results['camembert'].apply(lambda x: get_camembert_tagged(x, tag))
 
-        with st.expander("Personnes et Organisations", expanded=False):
+        with st.expander(f"{dict_lang['PER']} {dict_lang['and']} {dict_lang['ORG'].lower()}", expanded=False):
             st.dataframe(
                 img_results[['text', 'ORG', 'PER']] \
                     .rename(columns={
-                    'text': 'Résultats d\'OCR',
-                    'PER': 'Personnes',
-                    'ORG': 'Organisations',
+                    'text': dict_lang['text'],
+                    'PER': dict_lang['PER'],
+                    'ORG': dict_lang['ORG'],
                 }),
                 hide_index=True,
                 use_container_width=True,
                 column_config = {
-                    "Résultats d\'OCR": st.column_config.Column("Résultats d\'OCR", width="medium"),
-                    "Personnes": st.column_config.Column("Personnes", width="small"),
-                    "Organisations": st.column_config.Column("Organisations", width="small")
+                    dict_lang['text']: st.column_config.Column(dict_lang['text'], width="medium"),
+                    dict_lang['PER']: st.column_config.Column(dict_lang['PER'], width="small"),
+                    dict_lang['ORG']: st.column_config.Column(dict_lang['ORG'], width="small")
                 }
             )
 
-        with st.expander("Dates et autres détections", expanded=False):
+        with st.expander(f"{dict_lang['camembert_date']} {dict_lang['and']} {dict_lang['MISC'].lower()}", expanded=False):
             st.dataframe(
                 img_results[['text', 'camembert_date', 'MISC']] \
                     .rename(columns={
-                    'text': 'Résultats d\'OCR',
-                    'camembert_date' : 'Dates détectées',
-                    'MISC': 'Autres détections'
+                    'text': dict_lang['text'],
+                    'camembert_date' : dict_lang['camembert_date'],
+                    'MISC': dict_lang['MISC']
                 }),
                 hide_index=True,
                 use_container_width=True,
                 column_config = {
-                    "Résultats d\'OCR": st.column_config.Column("Résultats d\'OCR", width="medium"),
-                    "Dates détectées": st.column_config.Column("Dates détectées", width="small"),
-                    "Autres détections": st.column_config.Column("Autres détections", width="small")
+                    dict_lang['text']: st.column_config.Column(dict_lang['text'], width="medium"),
+                    dict_lang['camembert_date']: st.column_config.Column(dict_lang['camembert_date'], width="small"),
+                    dict_lang['MISC']: st.column_config.Column(dict_lang['MISC'], width="small")
                 }
             )

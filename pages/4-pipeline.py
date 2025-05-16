@@ -13,10 +13,12 @@ import re
 from libs.pipeline_YOLO import pipeline_yolo2
 from libs.pipeline_GPT import *
 
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 # logos de la sidebar
-st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
+#st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
 
+state = st.session_state
+dict_lang = state.dict_lang[state.selected_lang]
 # ----------------------------------------------------------------------------------------------------------------------
 # Constantes
 # ----------------------------------------------------------------------------------------------------------------------
@@ -66,13 +68,13 @@ def last_modif(list_file):
 
 
 def reload_gallery():
-    st.session_state['selected_img_list'] = np.random.choice(img_list, size=NUM_IMAGES)
+    state['selected_img_list'] = np.random.choice(img_list, size=NUM_IMAGES)
 
 
 def run_pipelineYOLO2():
-    st.session_state['res_pipeline'] = pipeline_yolo2(st.session_state['selected_img'],
-                                                      st.session_state['yolo_path'],
-                                                      st.session_state['yolo_seg_path']).T[0]
+    state['res_pipeline'] = pipeline_yolo2(state['selected_img'],
+                                                      state['yolo_path'],
+                                                      state['yolo_seg_path']).T[0]
 
 
 def change_coord(bbox):
@@ -84,23 +86,23 @@ def change_coord(bbox):
 # Session
 # ----------------------------------------------------------------------------------------------------------------------
 # Initialiser l'état de l'application si non défini
-if 'selected_img_list' not in st.session_state:
-    st.session_state['selected_img_list'] = np.random.choice(img_list, size=NUM_IMAGES)
-if 'selected_img' not in st.session_state:
-    st.session_state['selected_img'] = None
-if 'yolo_path' not in st.session_state:
-    st.session_state['yolo_path'] = last_modif(list_yolo_weights)
-if 'yolo_seg_path' not in st.session_state:
-    st.session_state['yolo_seg_path'] = last_modif(list_yolo_seg_weights)
-if 'res_pipeline' not in st.session_state:
-    st.session_state['res_pipeline'] = None
-if 'res_gpt4' not in st.session_state:
-    st.session_state['res_gpt4'] = None
-if 'gpt_responses' not in st.session_state:
+if 'selected_img_list' not in state:
+    state['selected_img_list'] = np.random.choice(img_list, size=NUM_IMAGES)
+if 'selected_img' not in state:
+    state['selected_img'] = None
+if 'yolo_path' not in state:
+    state['yolo_path'] = last_modif(list_yolo_weights)
+if 'yolo_seg_path' not in state:
+    state['yolo_seg_path'] = last_modif(list_yolo_seg_weights)
+if 'res_pipeline' not in state:
+    state['res_pipeline'] = None
+if 'res_gpt4' not in state:
+    state['res_gpt4'] = None
+if 'gpt_responses' not in state:
     gpt_responses = pd.read_csv(Path(r"data/postmarks/ft150GPT4o_1155stamps.csv"))
     gpt_responses['stamp'] = gpt_responses['stamp'].map(lambda x: x.replace('_cls1', ''))
     gpt_responses.set_index('stamp', drop=True, inplace=True)
-    st.session_state['gpt_responses'] = gpt_responses
+    state['gpt_responses'] = gpt_responses
 
 # ----------------------------------------------------------------------------------------------------------------------
 # MAIN
@@ -117,13 +119,13 @@ with gallery_cols[-1]:
     st.button("Recharger la galerie", on_click=reload_gallery, use_container_width=True)
 
 with st.container(border=True):
-    img_path = image_select("Sélectionnez une image", st.session_state['selected_img_list'])
+    img_path = image_select("Sélectionnez une image", state['selected_img_list'])
 
 
-if st.session_state['selected_img'] is not img_path:
-    st.session_state['selected_img'] = img_path
-    st.session_state['res_pipeline'] = None
-    st.session_state['res_gpt4'] = None
+if state['selected_img'] is not img_path:
+    state['selected_img'] = img_path
+    state['res_pipeline'] = None
+    state['res_gpt4'] = None
 
 
 pipeline_cols = st.columns([0.25, 0.75])
@@ -162,8 +164,8 @@ with pipeline_cols[0]:
 
 with pipeline_cols[1]:
     with st.container(border=True):
-        if st.session_state['res_pipeline'] is not None:
-            if st.session_state['res_pipeline']['boxes_cls'].shape[0] == 0:
+        if state['res_pipeline'] is not None:
+            if state['res_pipeline']['boxes_cls'].shape[0] == 0:
 
                 def draw_no_boxes(img_path):
                     img_with_boxes = Image.open(img_path)
@@ -190,17 +192,17 @@ with pipeline_cols[1]:
                     return img_with_boxes
 
                 # Affichage de l'image avec les bounding boxes
-                image_with_boxes = draw_bounding_boxes(img_path, st.session_state['res_pipeline'])
+                image_with_boxes = draw_bounding_boxes(img_path, state['res_pipeline'])
                 st.image(image_with_boxes, use_container_width=True)
 
 
-if st.session_state['res_pipeline'] is not None:
-    if st.session_state['res_pipeline']['boxes_cls'].shape[0] != 0:
+if state['res_pipeline'] is not None:
+    if state['res_pipeline']['boxes_cls'].shape[0] != 0:
         # si on détecte des tampons
-        stamps_idx = (st.session_state['res_pipeline']['boxes_cls'] == 1)
-        if (st.session_state['res_pipeline']['boxes_cls'] == 1).sum() > 0:
-            stamps_list = st.session_state['res_pipeline']['stamps_bins'][stamps_idx].tolist()
-            stamps_titles = st.session_state['res_pipeline']['stamps_titles'][stamps_idx].tolist()
+        stamps_idx = (state['res_pipeline']['boxes_cls'] == 1)
+        if (state['res_pipeline']['boxes_cls'] == 1).sum() > 0:
+            stamps_list = state['res_pipeline']['stamps_bins'][stamps_idx].tolist()
+            stamps_titles = state['res_pipeline']['stamps_titles'][stamps_idx].tolist()
 
             with st.expander("Tampons détectés"):
                 st.warning("NB. Les images étant redimensionnées à 1024 pixels de côté maximum dans la base de donnée "
@@ -224,8 +226,8 @@ if st.session_state['res_pipeline'] is not None:
                             with st.container(border=True):
                                 st.markdown("Lecture de GPT4o :")
 
-                                if stamps_title in st.session_state['gpt_responses'].index:
-                                    processed_resp = st.session_state['gpt_responses'].loc[stamps_title, :]
+                                if stamps_title in state['gpt_responses'].index:
+                                    processed_resp = state['gpt_responses'].loc[stamps_title, :]
                                 else:
                                     processed_resp = pd.Series(
                                         json.loads(empty_json(stamps_title))

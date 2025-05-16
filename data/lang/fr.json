@@ -1,0 +1,51 @@
+{
+  "1-home": "Accueil",
+  "2-map": "Carte interactive",
+  "3-research": "Recherche par mots-cl\u00e9s",
+  "4-pipeline": "Pipeline YOLO2-GPT",
+  "language": "Langue",
+
+
+  "1-project_title": "Traitement d'Images d'Archives par l'Intelligence Artificielle",
+
+
+  "2-density": "Densit\u00e9s ",
+  "2-region": "R\u00e9gions ",
+  "2-department": "D\u00e9partements ",
+  "2-town": "Villes ",
+  "2-points_color": "Couleur des points :",
+  "2-select_location": "S\u00e9lectionnez un lieu :",
+  "2-confidence": "Confiance :",
+  "text": "R\u00e9sultats d'OCR",
+  "camembert_loc": "Lieux d\u00e9tect\u00e9s",
+  "address": "Adresses d\u00e9tect\u00e9es",
+  "PER": "Personnes",
+  "ORG": "Organisations",
+  "camembert_date" : "Dates d\u00e9tect\u00e9es",
+  "MISC": "Autres d\u00e9tections",
+  "&": "et",
+
+
+  "choose_image": "Choisissez une image :",
+
+
+  "tags": "\u00c9tiquettes :",
+  "urban": "Urbain",
+  "rural": "Rural",
+  "destruction": "Destruction",
+  "landscape": "Paysage",
+  "monuments": "Monument",
+  "person": "Personne",
+  "religion": "Religion",
+  "work": "Travail",
+  "public building": "B\u00e2timent public",
+  "art": "Art",
+  "no tag": "Aucun",
+
+
+  "keywords": "Mots-cl\u00e9s :",
+
+
+  "and": "et",
+  "or": "ou"
+}

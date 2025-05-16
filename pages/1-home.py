@@ -25,10 +25,12 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 # logos de la sidebar
-st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
+#st.logo("pictures/logos/IDMC_LOGO_UL-02.png")
 
+state = st.session_state
+dict_lang = state.dict_lang[state.selected_lang]
 # ----------------------------------------------------------------------------------------------------------------------
 # Constantes
 # ----------------------------------------------------------------------------------------------------------------------
@@ -39,6 +41,7 @@ IMAGE_FOLDER = Path(r"data/postcards_dataset_1024")  #TODO : possibilité de mod
 NUM_COLUMNS = 5   # Nombre de colonnes
 NUM_LINES = 3   # Nombre de colonnes
 RUN_EVERY = 15
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Fonctions
@@ -107,13 +110,13 @@ def get_imgs_by_tags(df, tags):
 # MAIN
 # ----------------------------------------------------------------------------------------------------------------------
 # 🖼️ Affichage
-st.title("🖼️ T2IA - Traitement d’Images d’Archives par l’Intelligence Artificielle")
+st.title(f"🖼️ T2IA - {dict_lang['1-project_title']}")
 
-col_names, col_dates = st.columns([0.85, 0.15])
+col_names, col_dates = st.columns([0.90, 0.10])
 with col_names:
     st.caption("Matthieu PELINGRE & Antoine TABBONE")
 with col_dates:
-    st.caption("12 mai 2025")
+    st.caption("16/05/2025")
 
 with st.container(height=NUM_LINES * 150, border=True):
     columns = st.columns(NUM_COLUMNS)
