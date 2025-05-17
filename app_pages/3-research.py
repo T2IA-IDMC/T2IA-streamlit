@@ -17,7 +17,7 @@ import json
 state = st.session_state
 dict_lang = state.dict_lang[state.selected_lang]
 
-st.title("Recherche par mots-clés")
+st.title(dict_lang["3-research"])
 # ----------------------------------------------------------------------------------------------------------------------
 # Fonctions
 # ----------------------------------------------------------------------------------------------------------------------
@@ -86,8 +86,9 @@ with st.container(border=True):
         field_cols = st.columns([0.1, 0.9])
         with field_cols[0]:
             research_dict[field_name]['how'] = st.selectbox(
-                'Logique',
+                dict_lang['3-logic'],
                 options=['or', 'and'],
+                format_func=lambda x: dict_lang[x],
                 disabled=field_name == 'location',
                 key=f'how_{field_name}'
             )
@@ -95,15 +96,23 @@ with st.container(border=True):
         with field_cols[1]:
             if field_name == 'tag':
                 research_dict[field_name]['research_kw'] = st.multiselect(
-                    field_name.capitalize(),
+                    dict_lang[field_name],
                     set(state.df_retrieval[field_name].sum()),
-                    format_func=lambda x: f"{dict_tags[x]['emoji']} {x}",
+                    format_func=lambda x: f"{dict_tags[x]['emoji']} {dict_lang[x]}",
+                    key=f'research_kw_{field_name}',
+                    placeholder=dict_lang["choose_option"]
+                )
+            elif field_name == 'keywords':
+                research_dict[field_name]['research_kw'] = st.multiselect(
+                    dict_lang[field_name],
+                    set(state.df_retrieval[field_name].sum()),
+                    format_func=lambda x: dict_lang[x],
                     key=f'research_kw_{field_name}',
                     placeholder=dict_lang["choose_option"]
                 )
             else:
                 research_dict[field_name]['research_kw'] = st.multiselect(
-                    field_name.capitalize(),
+                    dict_lang[field_name],
                     set(state.df_retrieval[field_name].sum()),
                     key=f'research_kw_{field_name}',
                     placeholder=dict_lang["choose_option"]
@@ -117,7 +126,7 @@ selected_nb = selected_images.shape[0]
 pages_nb = selected_nb // 6 + 1 if selected_nb % 6 != 0 else selected_nb // 6
 
 if selected_nb == 0:
-    st.warning("⚠️ Pas d'images trouvées.")
+    st.warning(f"⚠️ {dict_lang["3-not_found"]}.")
 else:
     with st.container(border=True):
         placeholder = st.empty()
@@ -129,7 +138,7 @@ else:
         )
         with placeholder.container():
             image = image_select(
-                f"{selected_nb} images trouvées ( {selected_page} / {pages_nb} pages )",
+                f"{selected_nb} {dict_lang["3-found"]} ( {selected_page} / {pages_nb} pages )",
                 selected_images.img_path.to_list()[6*(selected_page-1):6*selected_page]
             )
 
@@ -141,23 +150,26 @@ else:
         # affichage des tags
         img_tags = img_results.tag
 
-        tag_markdown = "Tags: "
+        tag_markdown = f"{dict_lang['tags']} "
 
         if len(img_tags) > 0:
             for tag in img_tags:
-                tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {tag}] "
+                tag_markdown += f":{dict_tags[tag]['color']}-badge[{dict_tags[tag]['emoji']} {dict_lang[tag]}] "
         else:
-            tag_markdown += ":gray-badge[☹️ no tag]"
+            tag_markdown += f":gray-badge[☹️ {dict_lang["no tag"]}]"
         st.markdown(tag_markdown.strip())
 
     with col_kw:
         # affichage des mots-clés
-        kws_markdown = "Keywords: "
+        kws_markdown = f"{dict_lang['keywords']} "
         img_kws = img_results.keywords
         if img_kws[0] != 'no keywords':
             if img_results.predicted:
                 dict_kw_pred = img_results.pred_keywords
-                kws_markdown = "Predicted " + kws_markdown
+                if state.selected_lang == 'en':
+                    kws_markdown = "Predicted " + kws_markdown
+                elif state.selected_lang == 'fr':
+                    kws_markdown = kws_markdown[:-2] + "prédits : "
                 for kw in img_kws:
                     if dict_kw_pred[kw] < 0.75:
                         kws_markdown += ":red"
@@ -165,12 +177,12 @@ else:
                         kws_markdown += ":orange"
                     else:
                         kws_markdown += ":green"
-                    kws_markdown += f"-badge[{kw} ({dict_kw_pred[kw]:.0%})] "
+                    kws_markdown += f"-badge[{dict_lang[kw]} ({dict_kw_pred[kw]:.0%})] "
             else:
                 for kw in img_kws:
-                    kws_markdown += f":blue-badge[{kw}] "
+                    kws_markdown += f":blue-badge[{dict_lang[kw]}] "
         else:
-            kws_markdown += ":gray-badge[no keyword]"
+            kws_markdown += f":gray-badge[{dict_lang["no keywords"]}]"
         st.markdown(kws_markdown.strip())
 
 

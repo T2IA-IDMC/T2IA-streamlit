@@ -523,12 +523,12 @@ if state['selected_location'] is not None:
                             kws_markdown += ":orange"
                         else:
                             kws_markdown += ":green"
-                        kws_markdown += f"-badge[{kw} ({dict_kw_pred[kw]:.0%})] "
+                        kws_markdown += f"-badge[{dict_lang[kw]} ({dict_kw_pred[kw]:.0%})] "
                 else:
                     for kw in img_kws.keywords:
-                        kws_markdown += f":blue-badge[{kw}] "
+                        kws_markdown += f":blue-badge[{dict_lang[kw]}] "
             else:
-                kws_markdown += ":gray-badge[no keyword]"
+                kws_markdown += f":gray-badge[{dict_lang["no keywords"]}]"
             st.markdown(kws_markdown.strip())
 
 
