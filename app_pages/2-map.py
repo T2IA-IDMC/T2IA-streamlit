@@ -308,6 +308,7 @@ if 'map_deck' not in state:
         tooltip={'html': "<b>{city_code}</b><br><b>{count}</b> postcards", 'style': {'backgroundColor': 'steelblue', 'color': 'white'}},
     )
 
+
 # Affichage de la carte
 title_col, map_st_col, color_col = st.columns([0.7, 0.1, 0.2])
 with title_col:
@@ -450,7 +451,6 @@ if selected_point is not None:
                 ocr_locations['city_code'] == selected_point
             ].index[0]
         )
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -641,3 +641,18 @@ if state['selected_location'] is not None:
                     dict_lang['MISC']: st.column_config.Column(dict_lang['MISC'], width="small")
                 }
             )
+
+
+# détection de fin de chargement de la page
+if ("map_init" not in state) or not state.map_init:
+    state["home_init"] = False
+    state["map_init"] = True
+    state["research_init"] = False
+    state["pipeline_init"] = False
+    # mise à jour de l'url avec la langue (obligé sinon clic en plus requis pour map notament)
+    if "selected_lang" in state:
+        st.query_params['lang'] = state["selected_lang"]
+    else:
+        st.query_params['lang'] = "fr"
+
+    st.rerun()

@@ -32,8 +32,36 @@
   "tag": "\u00c9tiquettes :",
 
 
+  "4-gallery": "Galerie d'images",
+  "4-reload": "Recharger la galerie",
+  "4-pipeline_params": "Param\u00e8tres pipeline",
+  "4-det_model": "Mod\u00e8le de d\u00e9tection :",
+  "4-seg_model": "Mod\u00e8le de segmentation :",
+  "4-run": "Ex\u00e9cuter",
+  "4-detected_stamp": "Tampons d\u00e9tect\u00e9s",
+  "4-nb": "NB. Les images \u00e9tant redimensionn\u00e9es à 1024 pixels de c\u00f4t\u00e9 maximum dans la base de donn\u00e9e du streamlit, la segmentation peut ne pas \u00eatre aussi pr\u00e9cise que sur les images originales.",
+  "4-choose_stamp": "Choisissez un tampon",
+  "4-gpt_reading": "Lecture de GPT4o :",
+  "postal agency": "Agence postale",
+  "date": "Date",
+  "department": "D\u00e9partement",
+  "starred hour": "Apr\u00e8s derni\u00e8re lev\u00e9e",
+  "collection": "Lev\u00e9e",
+  "stamp type": "Type de tampon",
+  "quality": "Qualit\u00e9",
+  "True": "Vrai",
+  "False": "Faux",
+  "date stamp": "Bureau de recette",
+  "hexagonal date stamp": "Recette auxiliaire",
+  "convoyeur line stamp": "Convoyeur ligne",
+  "poor": "faible",
+  "mediocre": "m\u00e9diocre",
+  "good": "bonne",
+
+
   "choose_image": "Choisissez une image :",
   "choose_option": "Choisissez une option",
+  "selected_image": "Image s\u00e9lectionn\u00e9e",
 
 
   "tags": "\u00c9tiquettes :",

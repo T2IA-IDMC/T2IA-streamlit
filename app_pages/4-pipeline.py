@@ -104,22 +104,30 @@ if 'gpt_responses' not in state:
     gpt_responses.set_index('stamp', drop=True, inplace=True)
     state['gpt_responses'] = gpt_responses
 
+    # mise à jour de l'url avec la langue
+    if "selected_lang" in state:
+        st.query_params['lang'] = state["selected_lang"]
+    else:
+        st.query_params['lang'] = "fr"
+
+    st.rerun()
+
 # ----------------------------------------------------------------------------------------------------------------------
 # MAIN
 # ----------------------------------------------------------------------------------------------------------------------
 # 🖼️ Affichage
-st.title("Test de la Pipeline YOLO2-GPT")
+st.title(dict_lang["4-pipeline"])
 
 gallery_cols = st.columns([0.8, 0.2])
 
 with gallery_cols[0]:
-    st.subheader("🖼️ Galerie d'images")
+    st.subheader(f"🖼️ {dict_lang["4-gallery"]}")
 
 with gallery_cols[-1]:
-    st.button("Recharger la galerie", on_click=reload_gallery, use_container_width=True)
+    st.button(dict_lang["4-reload"], on_click=reload_gallery, use_container_width=True)
 
 with st.container(border=True):
-    img_path = image_select("Sélectionnez une image", state['selected_img_list'])
+    img_path = image_select(dict_lang["choose_image"], state['selected_img_list'])
 
 
 if state['selected_img'] is not img_path:
@@ -133,16 +141,16 @@ pipeline_cols = st.columns([0.25, 0.75])
 with pipeline_cols[0]:
     with st.container(border=True):
         with st.container(border=True):
-            st.markdown('Image sélectionnée')
+            st.markdown(dict_lang["selected_image"])
             st.image(img_path, caption=img_path.stem, use_container_width=True)
 
         with st.container(border=True):
-            st.markdown('Paramètres pipeline')
+            st.markdown(dict_lang["4-pipeline_params"])
             dict_yolo_det = {
                 path: path.stem.split('-')[-1].split('_')[0].capitalize() for path in list_yolo_weights
             }
             st.selectbox(
-                "Modèle de détection :",
+                dict_lang["4-det_model"],
                 dict_yolo_det,
                 format_func=lambda x: dict_yolo_det[x],
                 key='yolo_path',
@@ -152,14 +160,14 @@ with pipeline_cols[0]:
                 path: path.stem.split('_')[0].split('e-')[-1].capitalize() for path in list_yolo_seg_weights
             }
             st.selectbox(
-                "Modèle de segmentation :",
+                dict_lang["4-seg_model"],
                 dict_yolo_seg,
                 format_func=lambda x: dict_yolo_seg[x],
                 key='yolo_seg_path',
             )
 
 
-        st.button("Exécuter", on_click=run_pipelineYOLO2, use_container_width=True)
+        st.button(dict_lang["4-run"], on_click=run_pipelineYOLO2, use_container_width=True)
 
 
 with pipeline_cols[1]:
@@ -204,14 +212,14 @@ if state['res_pipeline'] is not None:
             stamps_list = state['res_pipeline']['stamps_bins'][stamps_idx].tolist()
             stamps_titles = state['res_pipeline']['stamps_titles'][stamps_idx].tolist()
 
-            with st.expander("Tampons détectés"):
-                st.warning("NB. Les images étant redimensionnées à 1024 pixels de côté maximum dans la base de donnée "
-                           "du streamlit, la segmentation peut ne pas être aussi précise que sur les images originales.")
+            with st.expander(dict_lang["4-detected_stamp"]):
+                st.warning("NB. As images are resized to a maximum of 1024 pixels per side in the streamlit database, "
+                           "segmentation may not be as accurate as on the original images.")
                 stamps_cols = st.columns([0.2, 0.8])
 
                 with stamps_cols[0]:
                     with st.container(border=True):
-                        stamp_idx = image_select("Sélectionnez un tampon", stamps_list, return_value='index')
+                        stamp_idx = image_select(dict_lang["4-choose_stamp"], stamps_list, return_value='index')
                         stamp_img = stamps_list[stamp_idx]
                         stamps_title = stamps_titles[stamp_idx]
 
@@ -224,7 +232,7 @@ if state['res_pipeline'] is not None:
 
                         with stamps_sub_cols[1]:
                             with st.container(border=True):
-                                st.markdown("Lecture de GPT4o :")
+                                st.markdown(dict_lang["4-gpt_reading"])
 
                                 if stamps_title in state['gpt_responses'].index:
                                     processed_resp = state['gpt_responses'].loc[stamps_title, :]
@@ -232,6 +240,11 @@ if state['res_pipeline'] is not None:
                                     processed_resp = pd.Series(
                                         json.loads(empty_json(stamps_title))
                                     ).rename(index=stamps_title).drop('stamp')
+
+                                # traduction pour affichage
+                                processed_resp.rename(index=dict_lang, inplace=True)
+                                processed_resp = processed_resp.map(lambda x: dict_lang[str(x)] if str(x) in dict_lang else x)
+
                                 st.dataframe(processed_resp, use_container_width=True)
 
                         #if st.button("Envoyer à GPT", use_container_width=True):
@@ -253,3 +266,16 @@ if state['res_pipeline'] is not None:
                         #            st.dataframe(processed_resp, use_container_width=True)
 
 
+# détection de fin de chargement de la page
+if ("pipeline_init" not in state) or not state.pipeline_init:
+    state["home_init"] = False
+    state["map_init"] = False
+    state["research_init"] = False
+    state["pipeline_init"] = True
+    # mise à jour de l'url avec la langue (obligé sinon clic en plus requis pour map notament)
+    if "selected_lang" in state:
+        st.query_params['lang'] = state["selected_lang"]
+    else:
+        st.query_params['lang'] = "fr"
+
+    st.rerun()

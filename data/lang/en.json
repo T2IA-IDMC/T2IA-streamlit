@@ -32,8 +32,36 @@
   "tag": "Tags:",
 
 
+  "4-gallery": "Image gallery",
+  "4-reload": "Reload gallery",
+  "4-pipeline_params": "Pipeline settings",
+  "4-det_model": "Detection model:",
+  "4-seg_model": "Segmentation model:",
+  "4-run": "Run",
+  "4-detected_stamp": "Detected stamps",
+  "4-nb": "NB. Les images \u00e9tant redimensionn\u00e9es à 1024 pixels de c\u00f4t\u00e9 maximum dans la base de donn\u00e9e du streamlit, la segmentation peut ne pas \u00eatre aussi pr\u00e9cise que sur les images originales.",
+  "4-choose_stamp": "Choose a stamp",
+  "4-gpt_reading": "GPT4o reading:",
+  "postal agency": "Postal agency",
+  "date": "Date",
+  "department": "Department",
+  "starred hour": "After last collection",
+  "collection": "Collection",
+  "stamp type": "Stamp type",
+  "quality": "Quality",
+  "True": "True",
+  "False": "False",
+  "date stamp": "Post office",
+  "hexagonal date stamp": "Auxiliary post office",
+  "convoyeur line stamp": "Line conveyor",
+  "poor": "poor",
+  "mediocre": "mediocre",
+  "good": "good",
+
+
   "choose_image": "Choose an image:",
   "choose_option": "Choose an option",
+  "selected_image": "Selected image",
 
 
   "tags": "Tags:",

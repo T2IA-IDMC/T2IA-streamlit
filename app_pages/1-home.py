@@ -157,3 +157,18 @@ with col5:
 
 # affichages des images
 display_imgs(placeholders)
+
+
+# détection de fin de chargement de la page
+if ("home_init" not in state) or not state.home_init:
+    state["home_init"] = True
+    state["map_init"] = False
+    state["research_init"] = False
+    state["pipeline_init"] = False
+    # mise à jour de l'url avec la langue (obligé sinon clic en plus requis pour map notament)
+    if "selected_lang" in state:
+        st.query_params['lang'] = state["selected_lang"]
+    else:
+        st.query_params['lang'] = "fr"
+
+    st.rerun()

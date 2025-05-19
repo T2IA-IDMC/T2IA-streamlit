@@ -47,14 +47,12 @@ if "dict_lang" not in state:
 query_parameters = st.query_params
 
 # Set the default language if not already set
-if "lang" not in query_parameters:
+if "lang" not in st.query_params:
     if "selected_lang" in state:
         st.query_params['lang'] = state["selected_lang"]
     else:
         st.query_params['lang'] = "fr"
     st.rerun()
-
-
 
 
 # Define a callback function to set the language
@@ -82,9 +80,8 @@ dict_lang = state.dict_lang[state.selected_lang]
 page_files = Path('app_pages').glob('*.py')
 
 pages = []
-for page_file in page_files:
-    pages.append(st.Page(page_file.as_posix(), title=dict_lang[page_file.stem]))
+for page_file in sorted(page_files):
+    pages.append(st.Page(page_file.as_posix(), title=dict_lang[page_file.stem], default=(page_file.stem=="1-home")))
 
 pg = st.navigation(pages)
 pg.run()
-

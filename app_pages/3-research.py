@@ -76,6 +76,14 @@ if 'df_retrieval' not in state:
     state.df_retrieval = pd.read_json('data/keywords/df_retrieval.json')
     state.df_retrieval.set_index('img_name', inplace=True)
 
+    # mise à jour de l'url avec la langue
+    if "selected_lang" in state:
+        st.query_params['lang'] = state["selected_lang"]
+    else:
+        st.query_params['lang'] = "fr"
+
+    st.rerun()
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Sélection
@@ -188,3 +196,18 @@ else:
 
     # Affichage de l'image sélectionnée
     st.image(image, caption=f"Image : {img_results.name}")
+
+
+# détection de fin de chargement de la page
+if ("research_init" not in state) or not state.research_init:
+    state["home_init"] = False
+    state["map_init"] = False
+    state["research_init"] = True
+    state["pipeline_init"] = False
+    # mise à jour de l'url avec la langue (obligé sinon clic en plus requis pour map notament)
+    if "selected_lang" in state:
+        st.query_params['lang'] = state["selected_lang"]
+    else:
+        st.query_params['lang'] = "fr"
+
+    st.rerun()
