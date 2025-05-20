@@ -112,7 +112,7 @@ def get_imgs_by_tags(df, tags):
 # 🖼️ Affichage
 st.title(f"🖼️ T2IA - {dict_lang['1-project_title']}")
 
-col_names, col_dates = st.columns([0.90, 0.10])
+col_names, col_dates = st.columns([0.85, 0.15])
 with col_names:
     st.caption("Matthieu PELINGRE & Antoine TABBONE")
 with col_dates:

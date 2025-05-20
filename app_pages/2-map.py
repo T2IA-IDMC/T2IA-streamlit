@@ -310,7 +310,7 @@ if 'map_deck' not in state:
 
 
 # Affichage de la carte
-title_col, map_st_col, color_col = st.columns([0.7, 0.1, 0.2])
+title_col, map_st_col, color_col = st.columns([0.65, 0.15, 0.2])
 with title_col:
     st.title(dict_lang["2-map"])
 with map_st_col:

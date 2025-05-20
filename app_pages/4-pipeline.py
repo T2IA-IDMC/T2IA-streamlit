@@ -213,8 +213,7 @@ if state['res_pipeline'] is not None:
             stamps_titles = state['res_pipeline']['stamps_titles'][stamps_idx].tolist()
 
             with st.expander(dict_lang["4-detected_stamp"]):
-                st.warning("NB. As images are resized to a maximum of 1024 pixels per side in the streamlit database, "
-                           "segmentation may not be as accurate as on the original images.")
+                st.warning(dict_lang["4-nb"])
                 stamps_cols = st.columns([0.2, 0.8])
 
                 with stamps_cols[0]:
