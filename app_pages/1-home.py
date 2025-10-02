@@ -132,19 +132,7 @@ with col1:
     st.image(Image.open("pictures/logos/Logo_Région_Grand_Est_-_2022.png"), use_container_width=True)
 
 with col2:
-    st.markdown("""
-        <style>
-        .container {
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-    st.markdown(
-        '<div class="container"><img src="https://www.image-est.fr/files/3/imageEst/imageest_blanc_320.png" /></div>',
-        unsafe_allow_html=True
-    )
+    st.image("pictures/logos/imageest_noir_360.png", use_container_width=True)
 
 with col3:
     st.image("pictures/logos/formations-universite-de-lorraine-logo-1671626379.jpg", use_container_width=True)
@@ -153,7 +141,7 @@ with col4:
     st.image("pictures/logos/IDMC_LOGO_UL-02.png", use_container_width=True)
 
 with col5:
-    st.image("pictures/intro/logo-bpi.jpg", use_container_width=True)
+    st.image("pictures/logos/logo_bpi_360.png", use_container_width=True)
 
 # affichages des images
 display_imgs(placeholders)
