@@ -39,7 +39,7 @@
   "4-seg_model": "Segmentation model:",
   "4-run": "Run",
   "4-detected_stamp": "Detected stamps",
-  "4-nb": "NB. Les images \u00e9tant redimensionn\u00e9es à 1024 pixels de c\u00f4t\u00e9 maximum dans la base de donn\u00e9e du streamlit, la segmentation peut ne pas \u00eatre aussi pr\u00e9cise que sur les images originales.",
+  "4-nb": "N.B. As images are resized to a maximum of 1024 pixels in the Streamlit database, segmentation may not be as accurate as on the original images.",
   "4-choose_stamp": "Choose a stamp",
   "4-gpt_reading": "GPT4o reading:",
   "postal agency": "Postal agency",
