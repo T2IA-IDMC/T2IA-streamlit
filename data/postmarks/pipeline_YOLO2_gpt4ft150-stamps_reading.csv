@@ -1,4 +1,4 @@
-stamp,postal agency,date,department,starred hour,collection,stamp type,quality,manual,year,month,day,image,dep_name,town_name
+stamp,postal agency,date,department,starred hour,collection,stamp type,quality,manual,year,month,day,img_name,dep_name,town_name
 FI-0970-0003_cls1_0,ATTIGNY,XXXX-07-30TXX:XX,ARDENNES,False,3E,date stamp,mediocre,True,,7.0,30.0,FI-0970-0003,Ardennes,Attigny
 FI-0970-0010_cls1_0,,1913-08-10TXX:XX,,False,,hexagonal date stamp,mediocre,False,1913.0,8.0,10.0,FI-0970-0010,,
 FI-0970-0011_cls1_0,,1907-05-18T08:25,,False,,date stamp,mediocre,False,1907.0,5.0,18.0,FI-0970-0011,,
@@ -62,7 +62,6 @@ FI-0970-0152_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-0
 FI-0970-0093_cls1_0,,1905-03-12T06:25,MARNE,False,,date stamp,mediocre,False,1905.0,3.0,12.0,FI-0970-0093,,
 FI-0970-0154_cls1_0,,XXXX-XX-XXT3X:2X,,False,,date stamp,poor,False,,,,FI-0970-0154,,
 FI-0970-0155_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-0155,,
-FI-0970-0160_cls1_1,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-0160,,
 FI-0970-0161_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-0161,,
 FI-0970-0165_cls1_0,,190X-12-18T21:55,,False,,date stamp,poor,False,,12.0,18.0,FI-0970-0165,,
 FI-0970-0101_cls1_1,THORIGNY S/ MARNE,1928-04-25T05:50,SEINE ET MARNE,False,,date stamp,mediocre,True,1928.0,4.0,25.0,FI-0970-0101,Seine-et-Marne,Thorigny-sur-Marne
@@ -109,7 +108,6 @@ FI-0970-0488_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-0488,,
 FI-0970-0146_cls1_1,FERE-CHAMPENOISE,1909-10-XXT14:05,MARNE,False,,date stamp,mediocre,True,1909.0,10.0,,FI-0970-0146,Marne,Fère-Champenoise
 FI-0970-0545_cls1_0,GERBEVILLER,XXXX-XX-XXTXX:XX,MTHE ET MLLE,False,,date stamp,poor,True,,,,FI-0970-0545,Meurthe-et-Moselle,
 FI-0970-0147_cls1_0,AVIZE,1909-02-10TXX:50,MARNE,False,,date stamp,mediocre,True,1909.0,2.0,10.0,FI-0970-0147,Marne,Avize
-FI-0970-0546_cls1_0,GERBEVILLER,XXXX-XX-XXTXX:XX,MTHE ET MLLE,False,,date stamp,poor,True,,,,FI-0970-0546,Meurthe-et-Moselle,
 FI-0970-0560_cls1_1,,XXXX-XX-07T21:XX,,True,,date stamp,poor,False,,,7.0,FI-0970-0560,,
 FI-0970-0151_cls1_0,BLESMES,1903-10-25TXX:XX,MARNE,False,1E,date stamp,mediocre,True,1903.0,10.0,25.0,FI-0970-0151,,
 FI-0970-0561_cls1_0,NANCY,1908-08-19T18:10,MTHE ET MLLE,False,,date stamp,mediocre,True,1908.0,8.0,19.0,FI-0970-0561,Meurthe-et-Moselle,
@@ -120,9 +118,7 @@ FI-0970-0568_cls1_0,NANCY-GARE,1904-07-14T09:10,MTHE ET MLLE,False,,date stamp,g
 FI-0970-0570_cls1_0,NANCY,1908-05-05T18:55,MTHE ET MLLE,False,,date stamp,mediocre,False,1908.0,5.0,5.0,FI-0970-0570,Meurthe-et-Moselle,
 FI-0970-0160_cls1_0,,XXXX-XX-13TXX:33,MARNE,False,,date stamp,poor,False,,,13.0,FI-0970-0160,,
 FI-0970-0574_cls1_0,PARIS 67,1915-08-22TXX:XX,S. ET O.,False,5E,date stamp,mediocre,False,1915.0,8.0,22.0,FI-0970-0574,Paris,
-FI-0970-0575_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-0575,,
 FI-0970-0163_cls1_0,VOUZIERS,1909-04-15T07:XX,MARNE,False,5E,date stamp,mediocre,False,1909.0,4.0,15.0,FI-0970-0163,,
-FI-0970-0575_cls1_2,NANCY-,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-0575,Meurthe-et-Moselle,
 FI-0970-0578_cls1_0,NANCY-GARE,XXXX-XX-XXT22:35,MTHE ET MLLE,False,,date stamp,poor,True,,,,FI-0970-0578,Meurthe-et-Moselle,
 FI-0970-0580_cls1_0,,1910-XX-X7TXX:20,,False,,date stamp,poor,True,1910.0,,,FI-0970-0580,,
 FI-0970-0581_cls1_0,,1920-08-25TXX:XX,,False,7E,date stamp,poor,False,1920.0,8.0,25.0,FI-0970-0581,,
@@ -145,7 +141,6 @@ FI-0970-0614_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-0
 FI-0970-0616_cls1_0,NANCY-ENTREPOT,1917-04-26TXX:XX,MTHE ET MLLE,False,,date stamp,mediocre,False,1917.0,4.0,26.0,FI-0970-0616,Meurthe-et-Moselle,
 FI-0970-0617_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0617,,
 FI-0970-0192_cls1_0,EPERNAY,1913-08-27T21:35,MARNE,False,,date stamp,mediocre,False,1913.0,8.0,27.0,FI-0970-0192,Marne,Épernay
-FI-0970-0617_cls1_1,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-0617,,
 FI-0970-0196_cls1_0,SOMPUIS,1905-09-X7TXX:XX,MARNE,False,,date stamp,mediocre,True,1905.0,9.0,,FI-0970-0196,Marne,Sompuis
 FI-0970-0197_cls1_0,,1908-XX-XXTXX:XX,MARNE,False,,date stamp,poor,True,1908.0,,,FI-0970-0197,,
 FI-0970-0621_cls1_0,NANCY-GARE,XXXX-XX-XXTXX:XX,MTHE ET MLLE,False,,date stamp,poor,False,,,,FI-0970-0621,Meurthe-et-Moselle,
@@ -156,7 +151,6 @@ FI-0970-0201_cls1_0,REIMS-DIEU-LUMIERE,1911-06-16T15:05,MARNE,False,,date stamp,
 FI-0970-0202_cls1_0,EPINAL,1905-XX-2XTXX:XX,VOSGES,False,,date stamp,mediocre,False,1905.0,,,FI-0970-0202,Vosges,Épinal
 FI-0970-0627_cls1_0,NANCY,1913-XX-08T06:XX,MTHE ET MLLE,False,,date stamp,mediocre,False,1913.0,,8.0,FI-0970-0627,Meurthe-et-Moselle,
 FI-0970-0205_cls1_0,MARGERIE HANCOURT,XXXX-XX-30TXX:XX,MARNE,False,,date stamp,mediocre,True,,,30.0,FI-0970-0205,Marne,Margerie-Hancourt
-FI-0970-0630_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0630,,
 FI-0970-0635_cls1_0,NANCY-GARE,1908-08-18TXX:20,MTHE ET MLLE,False,,date stamp,mediocre,True,1908.0,8.0,18.0,FI-0970-0635,Meurthe-et-Moselle,
 FI-0970-0208_cls1_0,EPERNAY,XXXX-XX-14T15:XX,MARNE,True,,date stamp,mediocre,False,,,14.0,FI-0970-0208,Marne,Épernay
 FI-0970-0636_cls1_0,NANCY,19X1-07-31T12:50,MTHE ET MLLE,False,,date stamp,good,True,,7.0,31.0,FI-0970-0636,Meurthe-et-Moselle,
@@ -170,9 +164,7 @@ FI-0970-0717_cls1_0,GARE DE L'EST A NANCY,1913-03-30T22:10,,False,,conveyor line
 FI-0970-0218_cls1_0,,190X-06-XXTXX:XX,MARNE,False,,hexagonal date stamp,mediocre,False,,6.0,,FI-0970-0218,,
 FI-0970-0730_cls1_0,CHALONS S/ MARNE,1906-01-19T22:XX,,True,,date stamp,mediocre,True,1906.0,1.0,19.0,FI-0970-0730,Marne,
 FI-0970-0731_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0731,,
-FI-0970-0734_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0734,,
 FI-0970-0220_cls1_0,MARNE,1912-07-14TXX:XX,MARNE,False,,date stamp,mediocre,False,1912.0,7.0,14.0,FI-0970-0220,,
-FI-0970-0734_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0734,,
 FI-0970-0751_cls1_0,PARIS,1915-04-12T08:36,SEINE,False,,date stamp,mediocre,False,1915.0,4.0,12.0,FI-0970-0751,Paris,
 FI-0970-0226_cls1_0,,XXXX-XX-XXTXX:XX,MARNE,True,,date stamp,poor,False,,,,FI-0970-0226,,
 FI-0970-0752_cls1_0,,XXXX-XX-XXTXX:XX,MTHE ET MLLE,False,6E,date stamp,poor,False,,,,FI-0970-0752,,
@@ -187,12 +179,8 @@ FI-0970-0242_cls1_0,,1908-08-05T20:XX,MEUSE,True,,date stamp,mediocre,True,1908.
 FI-0970-0243_cls1_0,,XXXX-XX-XXTXX:XX,MARNE,False,,date stamp,poor,False,,,,FI-0970-0243,,
 FI-0970-0791_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-0791,,
 FI-0970-0802_cls1_1,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-0802,,
-FI-0970-0813_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0813,,
 FI-0970-0262_cls1_0,EPINAL,1908-08-15TXX:35,VOSGES,False,,date stamp,mediocre,False,1908.0,8.0,15.0,FI-0970-0262,Vosges,Épinal
-FI-0970-0813_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0813,,
 FI-0970-0281_cls1_0,+ BOURG,1906-04-28T22:XX,VOSGES,True,,date stamp,mediocre,False,1906.0,4.0,28.0,FI-0970-0281,,
-FI-0970-0813_cls1_2,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0813,,
-FI-0970-0813_cls1_3,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0813,,
 FI-0970-0816_cls1_0,,XXXX-XX-16T07:25,,False,,date stamp,poor,False,,,16.0,FI-0970-0816,,
 FI-0970-0823_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-0823,,
 FI-0970-0294_cls1_0,,1908-06-14T10:X5,VOSGES,False,,date stamp,mediocre,True,1908.0,6.0,14.0,FI-0970-0294,,
@@ -233,7 +221,6 @@ FI-0970-0964_cls1_0,NANCY-GARE,1916-02-30TXX:XX,MTHE ET MLLE,False,,date stamp,m
 FI-0970-0491_cls1_0,GARE D'EPERNAY A,1912-08-17T23:35,MARNE,False,,date stamp,good,False,1912.0,8.0,17.0,FI-0970-0491,Marne,Épernay
 FI-0970-0492_cls1_0,GARE D'EPERNAY,1912-08-01T23:35,MARNE,False,,date stamp,good,False,1912.0,8.0,1.0,FI-0970-0492,Marne,Épernay
 FI-0970-0966_cls1_0,,XXXX-08-24TXX:XX,,False,21E,date stamp,poor,False,,8.0,24.0,FI-0970-0966,,
-FI-0970-0975_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-0975,,
 FI-0970-0502_cls1_0,EPERNAY,XXXX-XX-09TXX:XX,MARNE,False,,date stamp,poor,True,,,9.0,FI-0970-0502,Marne,Épernay
 FI-0970-0515_cls1_0,VERDUN,XXXX-XX-XXTXX:XX,MEUSE,False,,date stamp,poor,False,,,,FI-0970-0515,Meuse,Verdun
 FI-0970-1026_cls1_0,,XXXX-XX-XXTXX:XX,,False,,conveyor line stamp,poor,False,,,,FI-0970-1026,,
@@ -246,11 +233,9 @@ FI-0970-0524_cls1_0,EPERNAY,1907-08-05T22:30,MARNE,False,,date stamp,good,True,1
 FI-0970-1077_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-1077,,
 FI-0970-0526_cls1_0,EPERNAY,1911-04-26T10:25,MARNE,False,,date stamp,mediocre,True,1911.0,4.0,26.0,FI-0970-0526,Marne,Épernay
 FI-0970-0534_cls1_0,,1911-08-24T07:55,MARNE,False,,date stamp,mediocre,True,1911.0,8.0,24.0,FI-0970-0534,,
-FI-0970-1077_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-1077,,
 FI-0970-1082_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-1082,,
 FI-0970-1091_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-1091,,
 FI-0970-0560_cls1_0,PARIS 83,1905-06-XXTXX:XX,PARIS,True,,date stamp,mediocre,False,1905.0,6.0,,FI-0970-0560,Paris,Paris
-FI-0970-1094_cls1_1,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-1094,,
 FI-0970-1097_cls1_0,,1905-XX-04T13:5X,,False,,date stamp,mediocre,True,1905.0,,4.0,FI-0970-1097,,
 FI-0970-1099_cls1_1,,XXXX-XX-XXTXX:XX,,True,,date stamp,poor,True,,,,FI-0970-1099,,
 FI-0970-1099_cls1_2,,XXXX-XX-XXTXX:XX,,True,,date stamp,poor,True,,,,FI-0970-1099,,
@@ -262,18 +247,14 @@ FI-0970-1110_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-1110,,
 FI-0970-1110_cls1_2,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-1110,,
 FI-0970-1111_cls1_0,,XXXX-10-12T13:45,,False,,date stamp,mediocre,True,,10.0,12.0,FI-0970-1111,,
 FI-0970-1115_cls1_1,,1926-XX-1XTXX:XX,,False,,date stamp,poor,True,1926.0,,,FI-0970-1115,,
-FI-0970-1120_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-1120,,
 FI-0970-1122_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-1122,,
 FI-0970-1164_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-1164,,
 FI-0970-1164_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-1164,,
-FI-0970-1166_cls1_1,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-1166,,
-FI-0970-1166_cls1_2,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,True,,,,FI-0970-1166,,
 FI-0970-1169_cls1_1,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-1169,,
 FI-0970-1180_cls1_1,,XXXX-XX-15T15:XX,,False,,date stamp,poor,False,,,15.0,FI-0970-1180,,
 FI-0970-1180_cls1_2,LE PUY EN VELAY,191X-08-XXT15:15,HLE LOIRE,False,,date stamp,mediocre,True,,8.0,,FI-0970-1180,Haute-Loire,
 FI-0970-1180_cls1_3,NANGIS A PROVINS,XXXX-XX-15T15:1X,,False,,conveyor line stamp,mediocre,False,,,15.0,FI-0970-1180,,
 FI-0970-1180_cls1_4,CHALONS S/ MARNE A VITRY LEBLANC,XXXX-08-XXT15:15,,False,,conveyor line stamp,poor,False,,8.0,,FI-0970-1180,,
-FI-0970-1196_cls1_1,,XXXX-XX-XXTXX:XX,,False,,,poor,True,,,,FI-0970-1196,,
 FI-0970-1206_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-1206,,
 FI-0970-1230_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-1230,,
 FI-0970-1244_cls1_1,,1908-08-XXTXX:XX,,False,5,date stamp,poor,False,1908.0,8.0,,FI-0970-1244,,
@@ -506,7 +487,6 @@ FI-0970-1014_cls1_0,GARE D'EPERNAY,1909-11-01TXX:XX,MARNE,False,10E,date stamp,g
 FI-0970-1016_cls1_0,EPERNAY GARE,1920-09-03T16:XX,MARNE,True,,date stamp,mediocre,True,1920.0,9.0,3.0,FI-0970-1016,Marne,Épernay
 FI-0970-2461_cls1_0,ST MAX S/MEURTHE,1905-XX-12TXX:XX,MTHE ET MLLE,False,5E,date stamp,mediocre,False,1905.0,,12.0,FI-0970-2461,Vosges,
 FI-0970-2468_cls1_0,,XXXX-XX-XXTXX:XX,,False,,date stamp,poor,False,,,,FI-0970-2468,,
-FI-0970-1026_cls1_1,,XXXX-XX-XXTXX:XX,MARNE,False,,date stamp,poor,True,,,,FI-0970-1026,,
 FI-0970-2473_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-2473,,
 FI-0970-2476_cls1_0,,XXXX-XX-XXTXX:XX,,False,,,poor,False,,,,FI-0970-2476,,
 FI-0970-1043_cls1_0,EPERNAY,1906-02-09T14:15,MARNE,False,,date stamp,mediocre,True,1906.0,2.0,9.0,FI-0970-1043,Marne,Épernay

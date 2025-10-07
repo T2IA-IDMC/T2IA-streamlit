@@ -18,6 +18,11 @@ state = st.session_state
 dict_lang = state.dict_lang[state.selected_lang]
 
 st.title(dict_lang["4-stamps"])
+
+# CONSTANTES
+STAMP_PATH = "data/postmarks/stamps_img"
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Fonctions
 # ----------------------------------------------------------------------------------------------------------------------
@@ -234,6 +239,10 @@ else:
     line_nb = 0
     col_nb = 0
     for i in range(len(stamps_list)):
+        stamp_name = stamps_list[i].name.replace('_', '_cls1_')
+        st_subcol_img, st_subcol_bin = st_stamp_cols[line_nb][col_nb].columns(2)
+        st_subcol_img.image(f"{STAMP_PATH}/images/{stamp_name}.jpg")
+        st_subcol_bin.image(f"{STAMP_PATH}/bin/{stamp_name}.jpg")
         st_stamp_cols[line_nb][col_nb].write(stamps_list[i])
         col_nb += 1
         if col_nb == 3:
