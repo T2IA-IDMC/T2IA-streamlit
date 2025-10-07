@@ -149,6 +149,7 @@ with st.container(border=True):
 # Affichage
 # ----------------------------------------------------------------------------------------------------------------------
 selected_images = find_from_dict(state.df_stamps, research_dict).drop_duplicates(subset=["img_name"], keep='first')
+selected_images.sort_index(inplace=True)
 selected_nb = selected_images.shape[0]
 pages_nb = selected_nb // 6 + 1 if selected_nb % 6 != 0 else selected_nb // 6
 
