@@ -152,6 +152,7 @@ if ("home_init" not in state) or not state.home_init:
     state["home_init"] = True
     state["map_init"] = False
     state["research_init"] = False
+    state["stamp_init"] = False
     state["pipeline_init"] = False
     # mise à jour de l'url avec la langue (obligé sinon clic en plus requis pour map notament)
     if "selected_lang" in state:

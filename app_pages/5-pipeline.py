@@ -116,15 +116,15 @@ if 'gpt_responses' not in state:
 # MAIN
 # ----------------------------------------------------------------------------------------------------------------------
 # 🖼️ Affichage
-st.title(dict_lang["4-pipeline"])
+st.title(dict_lang["5-pipeline"])
 
 gallery_cols = st.columns([0.8, 0.2])
 
 with gallery_cols[0]:
-    st.subheader(f"🖼️ {dict_lang["4-gallery"]}")
+    st.subheader(f"🖼️ {dict_lang["5-gallery"]}")
 
 with gallery_cols[-1]:
-    st.button(dict_lang["4-reload"], on_click=reload_gallery, use_container_width=True)
+    st.button(dict_lang["5-reload"], on_click=reload_gallery, use_container_width=True)
 
 with st.container(border=True):
     img_path = image_select(dict_lang["choose_image"], state['selected_img_list'])
@@ -145,12 +145,12 @@ with pipeline_cols[0]:
             st.image(img_path, caption=img_path.stem, use_container_width=True)
 
         with st.container(border=True):
-            st.markdown(dict_lang["4-pipeline_params"])
+            st.markdown(dict_lang["5-pipeline_params"])
             dict_yolo_det = {
                 path: path.stem.split('-')[-1].split('_')[0].capitalize() for path in list_yolo_weights
             }
             st.selectbox(
-                dict_lang["4-det_model"],
+                dict_lang["5-det_model"],
                 dict_yolo_det,
                 format_func=lambda x: dict_yolo_det[x],
                 key='yolo_path',
@@ -160,14 +160,14 @@ with pipeline_cols[0]:
                 path: path.stem.split('_')[0].split('e-')[-1].capitalize() for path in list_yolo_seg_weights
             }
             st.selectbox(
-                dict_lang["4-seg_model"],
+                dict_lang["5-seg_model"],
                 dict_yolo_seg,
                 format_func=lambda x: dict_yolo_seg[x],
                 key='yolo_seg_path',
             )
 
 
-        st.button(dict_lang["4-run"], on_click=run_pipelineYOLO2, use_container_width=True)
+        st.button(dict_lang["5-run"], on_click=run_pipelineYOLO2, use_container_width=True)
 
 
 with pipeline_cols[1]:
@@ -212,13 +212,13 @@ if state['res_pipeline'] is not None:
             stamps_list = state['res_pipeline']['stamps_bins'][stamps_idx].tolist()
             stamps_titles = state['res_pipeline']['stamps_titles'][stamps_idx].tolist()
 
-            with st.expander(dict_lang["4-detected_stamp"]):
-                st.warning(dict_lang["4-nb"])
+            with st.expander(dict_lang["5-detected_stamp"]):
+                st.warning(dict_lang["5-nb"])
                 stamps_cols = st.columns([0.2, 0.8])
 
                 with stamps_cols[0]:
                     with st.container(border=True):
-                        stamp_idx = image_select(dict_lang["4-choose_stamp"], stamps_list, return_value='index')
+                        stamp_idx = image_select(dict_lang["5-choose_stamp"], stamps_list, return_value='index')
                         stamp_img = stamps_list[stamp_idx]
                         stamps_title = stamps_titles[stamp_idx]
 
@@ -231,7 +231,7 @@ if state['res_pipeline'] is not None:
 
                         with stamps_sub_cols[1]:
                             with st.container(border=True):
-                                st.markdown(dict_lang["4-gpt_reading"])
+                                st.markdown(dict_lang["5-gpt_reading"])
 
                                 if stamps_title in state['gpt_responses'].index:
                                     processed_resp = state['gpt_responses'].loc[stamps_title, :]
@@ -270,6 +270,7 @@ if ("pipeline_init" not in state) or not state.pipeline_init:
     state["home_init"] = False
     state["map_init"] = False
     state["research_init"] = False
+    state["stamp_init"] = False
     state["pipeline_init"] = True
     # mise à jour de l'url avec la langue (obligé sinon clic en plus requis pour map notament)
     if "selected_lang" in state:
