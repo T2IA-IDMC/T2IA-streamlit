@@ -126,7 +126,22 @@ with st.container(height=NUM_LINES * 150, border=True):
             placeholder = st.empty()
             placeholders.append(placeholder)
 
-# Colonnes des images
+
+# Publications
+with st.container(border=True):
+    st.header("Publications")
+    st.markdown("""
+        - Pelingre, M. & Tabbone, S. (2025). Historical Postcards Date Stamps Content Understanding, IEEE CBMI 2025.
+        - Pelingre, M. & Tabbone, S. (2025). Historical postcards classification combining visual content and text description, 23rd ICIAP 2025.
+        - Pelingre, M. & Tabbone, S. (2025). Benchmarking OCR Tools for Historical Postcards: A Dataset and Evaluation, 7th SUMAC @ ACM Multimedia 2025. <a href="https://doi.org/10.1145/3746273.3760201">doi: 10.1145/3746273.3760201</a>
+    """, unsafe_allow_html=True)
+    st.header("Dataset")
+    st.markdown("""
+        Pelingre, M. & Tabbone, S. (2025). Historical Postcards Dataset, V1, Recherche Data Gouv. <a href="https://doi.org/10.57745/GELGHH">doi: 10.57745/GELGHH</a>
+    """, unsafe_allow_html=True)
+
+
+# Logos
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     st.image(Image.open("pictures/logos/Logo_Région_Grand_Est_-_2022.png"), use_container_width=True)
@@ -142,6 +157,7 @@ with col4:
 
 with col5:
     st.image("pictures/logos/logo_bpi_360.png", use_container_width=True)
+
 
 # affichages des images
 display_imgs(placeholders)
