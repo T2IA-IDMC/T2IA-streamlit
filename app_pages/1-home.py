@@ -132,7 +132,7 @@ with st.container(border=True):
     st.header("Publications")
     st.markdown("""
         - Pelingre, M. & Tabbone, S. (2025). Historical Postcards Date Stamps Content Understanding, IEEE CBMI 2025.
-        - Pelingre, M. & Tabbone, S. (2025). Historical postcards classification combining visual content and text description, 23rd ICIAP 2025.
+        - Pelingre, M. & Tabbone, S. (2025). Historical postcards classification combining visual content and text description, 23rd ICIAP 2025. <a href="https://doi.org/10.1007/978-3-032-10185-3_27">doi: 10.1007/978-3-032-10185-3_27</a>
         - Pelingre, M. & Tabbone, S. (2025). Benchmarking OCR Tools for Historical Postcards: A Dataset and Evaluation, 7th SUMAC @ ACM Multimedia 2025. <a href="https://doi.org/10.1145/3746273.3760201">doi: 10.1145/3746273.3760201</a>
     """, unsafe_allow_html=True)
     st.header("Dataset")
