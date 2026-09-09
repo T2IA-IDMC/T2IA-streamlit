@@ -1,2 +1,7 @@
 [theme]
 base="dark"
+
+[server]
+# Désactive le file watcher : inutile sur Streamlit Cloud et évite le bruit
+# "torch.classes __path__._path" dans les logs (faux positif PyTorch x Streamlit).
+fileWatcherType = "none"
