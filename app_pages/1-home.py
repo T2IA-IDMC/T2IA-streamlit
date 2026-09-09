@@ -134,10 +134,12 @@ with st.container(border=True):
         - Pelingre, M. & Tabbone, S. (2025). Historical Postcards Date Stamps Content Understanding, IEEE CBMI 2025. <a href="https://doi.org/10.1109/CBMI66578.2025.11339306">doi: 10.1109/CBMI66578.2025.11339306</a>
         - Pelingre, M. & Tabbone, S. (2025). Historical postcards classification combining visual content and text description, 23rd ICIAP 2025. <a href="https://doi.org/10.1007/978-3-032-10185-3_27">doi: 10.1007/978-3-032-10185-3_27</a>
         - Pelingre, M. & Tabbone, S. (2025). Benchmarking OCR Tools for Historical Postcards: A Dataset and Evaluation, 7th SUMAC @ ACM Multimedia 2025. <a href="https://doi.org/10.1145/3746273.3760201">doi: 10.1145/3746273.3760201</a>
+        - Pelingre, M. & Tabbone, S. (2026). Automated Indexing of Historical Postcards: An End-to-End Approach Combining Image and Text Analysis, ACM JOCCH. <a href="https://doi.org/10.1145/3843222">doi: 10.1145/3843222</a>
+        - Pelingre, M. & Tabbone, S. (2027). Evaluating Vision-Language Models on Historical Postcards, 20th ICDAR 2026. <a href="https://doi.org/10.1007/978-3-032-36039-7_20">doi: 10.1007/978-3-032-36039-7_20</a>
     """, unsafe_allow_html=True)
     st.header("Dataset")
     st.markdown("""
-        Pelingre, M. & Tabbone, S. (2025). Historical Postcards Dataset, V1, Recherche Data Gouv. <a href="https://doi.org/10.57745/GELGHH">doi: 10.57745/GELGHH</a>
+        Pelingre, M. & Tabbone, S. (2026). Historical Postcards Dataset, V2, Recherche Data Gouv. <a href="https://doi.org/10.57745/GELGHH">doi: 10.57745/GELGHH</a>
     """, unsafe_allow_html=True)
 
 
