@@ -234,7 +234,7 @@ if state['res_pipeline'] is not None:
                                 st.markdown(dict_lang["5-gpt_reading"])
 
                                 if stamps_title in state['gpt_responses'].index:
-                                    processed_resp = state['gpt_responses'].loc[stamps_title, :]
+                                    processed_resp = state['gpt_responses'].loc[stamps_title, :].copy()
                                 else:
                                     processed_resp = pd.Series(
                                         json.loads(empty_json(stamps_title))
